@@ -1,0 +1,63 @@
+appId: ""
+---
+- runFlow:
+    when:
+      visible:
+        id: "modal-button-Continue"
+    commands:
+      - tapOn:
+          id: "modal-button-Continue"
+      - tapOn:
+          text: "Allow While Using App"
+# temporary to finish the flow
+- tapOn:
+    id: "CloseNavButton"
+- tapOn:
+    id: "modal-button-Cancel"
+
+# TODO: resolve issue with taking/picking image (= FE + BE changes)
+
+# - tapOn:
+#     id: "addressForm-address1-inputCell-value"
+# - scrollUntilVisible:
+#     element:
+#       id: "KYCAddressInfoScreen-button"
+#     direction: "DOWN"
+#     timeout: 50000
+#     speed: 40
+#     visibilityPercentage: 100
+#     centerElement: true
+# - tapOn:
+#     text: "Upload Document"
+# - tapOn:
+#     text: "Choose a photo"
+# - tapOn: 
+#     text: "Photo, 30 March 2018, 11:14 PM"
+# - inputText: "Sheikh Zayed Road"
+# - tapOn:
+#     id: "addressForm-city-inputCell-value"
+# - inputText: "Dubai"
+# - scrollUntilVisible:
+#     element:
+#       id: "KYCAddressInfoScreen-button"
+#     direction: "DOWN"
+#     timeout: 50000
+#     speed: 40
+#     visibilityPercentage: 100
+#     centerElement: true
+# - tapOn:
+#     id: "addressForm-city-inputCell-value"
+# - scrollUntilVisible:
+#     element:
+#       id: "KYCAddressInfoScreen-button"
+#     direction: "DOWN"
+#     timeout: 50000
+#     speed: 40
+#     visibilityPercentage: 100
+#     centerElement: true
+# - tapOn:
+#     id: "KYCAddressInfoScreen-button"
+# - extendedWaitUntil:
+#     notVisible: 
+#       id: "KYCAddressInfoScreen"
+#     timeout: 45000

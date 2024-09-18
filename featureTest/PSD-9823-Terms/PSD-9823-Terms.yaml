@@ -1,0 +1,20 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - IN
+  - DISABLED
+---
+# BE SURE THAT ALL THE FLOWS ARE ENABLE ON SERVICE PERSPECTIVE - OTHERWISE SKIP BY COMMENTING
+
+- runFlow:
+    file: ./onRamp.yaml
+# - runFlow:
+#     file: ./onRampOkto.yaml -- Only testable in India
+- runFlow:
+    file: ./topUpPartners.yaml
+- runFlow:
+    file: ./mercuryo.yaml
+- runFlow:
+    file: ./offRampBinancePay.yaml
+- runFlow:
+    file: ./offRampLightWallets.yaml

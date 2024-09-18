@@ -1,0 +1,186 @@
+appId: ''
+---
+#Android flow for help chat section Not working due to IDS
+
+- tapOn:
+    id: 'helpTouchable'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: 'launcher'
+
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: 'Open messaging window'
+
+- tapOn:
+    id: 'launcher'
+- assertVisible: 'Pyypl Care'
+- tapOn:
+    id: '1val-field_1.3.10--input'
+- inputText: 'John Doe'
+- tapOn: 'Next'
+- tapOn:
+    id: '14val-field_1.3.10--input'
+- inputText: 918722004410
+- tapOn: 'Next'
+- tapOn: 'United Arab Emirates'
+- inputText: 'India'
+- tapOn:
+    id: 'query'
+- tapOn: 'Send'
+- assertVisible:
+    "Pyypl says:How can we help you John Doe?\n\nPlease help us assist\
+    \ you better by choosing one of the options below:"
+- assertVisible: 'Send Money'
+- assertVisible: 'Card Services'
+- assertVisible: 'Passcode Reset'
+- assertVisible: 'Account Top up'
+- assertVisible: 'Manual Bank Transfer'
+- assertVisible: 'Follow up on a refund'
+- assertVisible: 'Verification & Account Security'
+- tapOn: 'Passcode Reset'
+- assertVisible:
+    "Pyypl says:Please follow the steps below:\n1. Tap on \"Forgot your\
+    \ passcode?\" on the app's login page.\n2. Click \"Verify\" and be prepared to\
+    \ take a selfie.\n3. Once the selfie is approved, just create a new password!"
+- assertVisible: 'Pyypl says:Was this helpful?'
+- assertVisible: 'Yes, problem solved'
+- assertVisible: 'I have no selfie option'
+- tapOn: 'Yes, problem solved'
+- assertVisible: 'Pyypl says:Great! You can ask me a question at any time.'
+- tapOn:
+    id: '1val-field_1.3.10--input'
+- inputText: 'Hello'
+- tapOn: 'Send message'
+- inputText: 'John Doe'
+- tapOn: 'Next'
+- inputText: 918722004410
+- tapOn: 'Next'
+- tapOn: 'United Arab Emirates'
+- inputText: 'India'
+- tapOn:
+    id: 'query'
+- tapOn: 'Send'
+- assertVisible: 'Pyypl says:Please select one of the options below to continue.'
+- assertVisible: 'Passcode Reset'
+- assertVisible: 'Card Services'
+- assertVisible: 'International Transfer'
+- assertVisible: 'Account Top up'
+- assertVisible: 'Manual Bank Transfer'
+- assertVisible: 'Manual Bank Transfer'
+- assertVisible: 'Follow up on a refund'
+- assertVisible: 'Verification & Account Security'
+- tapOn: 'Card Services'
+- assertVisible: 'Pyypl says:Are you within the United Arab Emirates?'
+- assertVisible: Yes
+- assertVisible: No
+- tapOn: Yes
+- assertVisible: 'Pyypl says:Please let us know more about your card inquiry.'
+- assertVisible: 'How to activate my virtual card'
+- assertVisible: 'How to activate my physical card'
+- assertVisible: 'How many cards can I activate on my Pyypl App?'
+- assertVisible: 'General Visa Card Inquiry'
+- tapOn: 'How to activate my virtual card'
+- assertVisible:
+    "Pyypl says:Here is how to activate your Visa Virtual Card on the\
+    \ Pyypl app.\n\nSimply:\n1. Navigate to your Pyypl app home page; (if you do not\
+    \ have a Pyypl app you can download one on Google Play Store or App Store)\n2.\
+    \ Tap on \"Cards\";\n3. Add Card;\n4. Personalize your card by adding your preferred\
+    \ name and selecting a colour;\n5. Done!\n\n\nIf you need a second card, the charge\
+    \ for the additional card is USD 5. You can only get 2 Virtual cards."
+- assertVisible:
+    "Here is how to activate your Visa Virtual Card on the Pyypl app.\
+    \ Simply: 1. Navigate to your Pyypl app home page; (if you do …"
+- assertVisible: 'View article'
+- tapOn: 'View article'
+- tapOn:
+    id: 'com.android.chrome:id/signin_fre_dismiss_button'
+- tapOn:
+    id: 'com.android.chrome:id/negative_button'
+- assertVisible:
+    id: 'section-articles-title'
+- assertVisible: 'Here is how to activate your Visa Virtual Card on the Pyypl app.'
+- launchApp: '${output.meta.app_bundle_id}'
+- assertVisible: 'Pyypl says:Was this helpful?'
+- assertVisible: 'Yes, Problem Solved'
+- assertVisible: 'No, I still need help'
+- tapOn: 'No, I still need help'
+- assertVisible:
+    "Please fill out the form below, and we'll attend to your Card Services\
+    \ Request."
+- assertVisible: 'Card Services Request'
+- assertVisible:
+    "Pyypl says:Thank you!\n\nPlease look out for a notification with\
+    \ a ticket number in your email."
+- tapOn: 'Card Services Request'
+- assertVisible: 'Contact us'
+- launchApp: '${output.meta.app_bundle_id}'
+- tapOn:
+    id: '1val-field_1.3.10--input'
+- inputText: 'ok'
+- tapOn: 'Send message'
+- inputText: 'John Doe'
+- tapOn: 'Next'
+- inputText: 918722004410
+- tapOn: 'Next'
+- tapOn: 'United Arab Emirates'
+- inputText: 'India'
+- tapOn:
+    id: 'query'
+- tapOn: 'Send'
+- assertVisible: 'Pyypl says:Please select one of the options below to continue.'
+- assertVisible: 'Passcode Reset'
+- assertVisible: 'Card Services'
+- assertVisible: 'International Transfer'
+- assertVisible: 'Account Top up'
+- assertVisible: 'Manual Bank Transfer'
+- assertVisible: 'Follow up on a refund'
+- assertVisible: 'Verification & Account Security'
+- tapOn: 'Follow up on a refund'
+- assertVisible: 'Pyypl says:Are you following up on a refund by a Merchant?'
+- assertVisible: true
+- assertVisible: false
+- tapOn: true
+- assertVisible:
+    "We created the form below to make it easier to follow up on your\
+    \ Merchant Refund.\n\nPlease attach the proof of refund before pressing submit.\n\
+    \nHere's what we need captured:\n\n✨️The 'last four digits of the card where the\
+    \ refund was done\n✨️The amount refunded\n✨️The name of the \"merchant\".\n✨️\
+    If a partial refund, a screenshot of the item and the amount cancelled and refunded\
+    \ would be needed\n\n\nSharing this information will make it easier for our team\
+    \ to process your merchant refund request."
+- assertVisible: 'Refund Request'
+- assertVisible:
+    "Pyypl says:Thank you!\n\nPlease look out for a notification with\
+    \ a ticket number in your email."
+- tapOn: 'Upload file'
+- addMedia:
+    - '../../assets/Help_chat_test_image.png'
+- tapOn:
+    text: 'Help_chat.*'
+- assertNotVisible: 'Sending'
+- assertVisible: 'Sent.*'
+- tapOn: 'Close'
+- tapOn:
+    id: 'CloseNavButton'
+# # iOS Flow
+# - tapOn:
+#     id: 'helpTouchable'
+# - runFlow:
+#     when:
+#       platform: iOS
+#     commands:
+#       - tapOn: 'Open messaging window'
+
+# - runFlow:
+#     when:
+#       notVisible: 'Name'
+#     commands:
+#       - tapOn: 'Type a message'
+#       - inputText: 'Hello'
+

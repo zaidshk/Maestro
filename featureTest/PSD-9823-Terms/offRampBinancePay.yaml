@@ -1,0 +1,46 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - IN
+  - DISABLED
+---
+- tapOn:
+    id: 'wallet-feature-Top up'
+- tapOn:
+    id: 'topUpOverview-categoryButton-Crypto-mode'
+- tapOn:
+    id: 'cell-item-CRYPTO_PROVIDERS'
+    index: 0
+- tapOn:
+    id: 'terms-and-conditions-read-action'
+# Commented because it's not working on Android
+# - assertVisible:
+#     text: 'Pyypl Kenya Limited Terms & Conditions (“Terms”)'
+- tapOn:
+    id: 'handle-bottomSheet'
+- tapOn:
+    id: 'checkbox'
+- tapOn:
+    id: 'accept-terms-button'
+# As Binance Pay is often down, I consider service is not available
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 40000
+- tapOn: 'Close'
+- assertVisible:
+    id: 'wallet-feature-Top up'
+- tapOn:
+    id: 'wallet-feature-Top up'
+- tapOn:
+    id: 'topUpOverview-categoryButton-Crypto-mode'
+- tapOn:
+    id: 'cell-item-CRYPTO_PROVIDERS'
+    index: 0
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 40000
+- tapOn: 'Close'
+- assertVisible:
+    id: 'wallet-feature-Top up'

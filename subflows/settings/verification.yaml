@@ -1,0 +1,20 @@
+appId: ''
+---
+- tapOn:
+    id: 'ProfileBtn'
+- tapOn:
+    id: 'menu-item-verification'
+- assertVisible: 'Completed'
+- assertVisible: 'ID Card'
+- assertVisible: 'First Name'
+- assertVisible: 'Last Name'
+- assertVisible: 'Birth Date'
+- assertVisible: 'Document Number'
+- assertVisible: 'Date of expiry'
+- assertVisible: 'Nationality'
+- tapOn:
+    id: 'BackButton'
+    optional: true
+- tapOn:
+    id: 'BackButton'
+    optional: true

@@ -1,0 +1,313 @@
+appId: ''
+---
+- tapOn:
+    id: 'ProfileBtn'
+- tapOn:
+    id: "menu-item-profile"
+
+#Assert fields
+- assertVisible:
+    id: 'coreText-name-title'
+- assertVisible:
+    id: 'coreText-name-subTitle'
+- assertVisible:
+    id: 'imageSVG-icon'
+- assertVisible:
+    id: 'coreText-nickname-title'
+- assertVisible:
+    id: 'coreText-nickname-subTitle'
+- assertVisible:
+    id: 'coreText-language-title'
+- assertVisible:
+    id: 'coreText-language-subTitle'
+- assertVisible:
+    id: 'coreText-phone-number-calling-code'
+- assertVisible: ${PHONE_NUMBER}
+- assertVisible:
+    id: 'coreText-dateOfBirth-title'
+- assertVisible:
+    id: 'coreText-dateOfBirth-subTitle'
+- assertVisible:
+    id: 'coreText-email-title'
+- assertVisible:
+    id: 'coreText-email-subTitle'
+- assertVisible:
+    id: 'coreText-residential-address-label'
+
+#Edit nickname and verify updated
+- tapOn:
+    id: 'setting-item-nickname'
+- eraseText: 20
+- inputText: ${NAME}
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+- tapOn:
+    id: 'coreText-next-buttonLabel'
+- assertVisible: "And it's done"
+- assertVisible: ${NAME}
+
+#Verify language locales availble
+- tapOn:
+    id: 'setting-item-language'
+- assertVisible:
+    id: 'ProfileLanguageScreen-Arabic'
+- assertVisible:
+    id: 'ProfileLanguageScreen-Bengali'
+- assertVisible:
+    id: 'ProfileLanguageScreen-Chinese Simplified'
+- assertVisible:
+    id: 'ProfileLanguageScreen-English'
+- assertVisible:
+    id: 'ProfileLanguageScreen-French'
+- assertVisible:
+    id: 'ProfileLanguageScreen-Hindi'
+- assertVisible:
+    id: 'ProfileLanguageScreen-Portuguese'
+- assertVisible:
+    id: 'ProfileLanguageScreen-Russian'
+- 'scroll'
+- assertVisible:
+    id: 'ProfileLanguageScreen-Swahili'
+- assertVisible:
+    id: 'ProfileLanguageScreen-Urdu'
+- tapOn:
+    id: 'imageSVG-icon'
+
+#Edit email address and verify if updated
+- tapOn:
+    id: 'setting-item-email'
+- tapOn:
+    id: "email-text-input"
+- eraseText: 35
+- inputText: ${EMAIL}
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+- tapOn:
+    id: 'coreText-verify-buttonLabel'
+- tapOn:
+    id: "CloseNavButton"
+- tapOn:
+    id: 'ProfileBtn'
+- tapOn:
+    id: "menu-item-profile"
+- assertVisible: ${EMAIL}
+
+#Edit and update address with upload document
+- tapOn:
+    id: 'coreText-residential-address-label'
+- runFlow:
+    when:
+      visible: 'Continue'
+    commands:
+      - tapOn: 'Continue'
+      - tapOn:
+          id: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
+- runFlow:
+    when: # fill in passcode
+      visible:
+        id: 'EnterPasscodeScreen'
+    commands:
+      - tapOn:
+          id: ${PASSCODE[0]}
+      - tapOn:
+          id: ${PASSCODE[1]}
+      - tapOn:
+          id: ${PASSCODE[2]}
+      - tapOn:
+          id: ${PASSCODE[3]}
+
+- assertVisible:
+    id: 'coreText-Text'
+- tapOn:
+    id: 'addressForm-address1-inputCell-value'
+- eraseText: 20
+- inputText: ${ADDRESS_1}
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+
+- swipe:
+    from:
+      id: 'addressForm-address1-inputCell-value'
+    direction: UP # To (50% of width, 10% of height)
+
+- tapOn:
+    id: 'addressForm-address2-inputCell-value'
+- eraseText: 20
+- inputText: ${ADDRESS_2}
+- tapOn:
+    id: 'addressForm-zipCode-inputCell-value'
+- eraseText: 20
+- inputText: ${ZIP_CODE}
+- tapOn:
+    id: 'addressForm-city-inputCell-value'
+- eraseText: 20
+- inputText: ${CITY}
+- assertVisible: ${COUNTRY_NAME}
+- assertVisible:
+    id: 'addressForm-mobileNumber-inputCell-value'
+
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+
+- tapOn:
+    id: 'upload-label'
+- tapOn:
+    id: 'android:id/button3'
+
+- addMedia:
+    - '../../assets/Sample_ID.jpg'
+
+- tapOn:
+    text: "Images"
+    optional: true
+
+- tapOn:
+    text: Sample_ID.*
+
+- runFlow:
+    when: # fill in passcode
+      visible:
+        id: 'EnterPasscodeScreen'
+    commands:
+      - tapOn:
+          id: ${PASSCODE[0]}
+      - tapOn:
+          id: ${PASSCODE[1]}
+      - tapOn:
+          id: ${PASSCODE[2]}
+      - tapOn:
+          id: ${PASSCODE[3]}
+
+- swipe:
+    from:
+      id: 'addressForm-address1-inputCell-value'
+    direction: UP # To (50% of width, 10% of height)
+
+- assertVisible:
+    id: file-name-0
+
+- assertVisible: Sample_ID.*
+
+- tapOn:
+    id: 'coreText-KYCAddressInfoScreen-buttonLabel'
+
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- tapOn:
+    id: 'coreText-residential-address-label'
+
+- swipe:
+    from:
+      id: 'addressForm-address1-inputCell-value'
+    direction: UP # To (50% of width, 10% of height)
+
+- assertVisible: ${ADDRESS_1}
+- assertVisible: ${ADDRESS_2}
+- assertVisible: ${ZIP_CODE}
+- assertVisible: ${CITY}
+- tapOn:
+    id: 'BackButton'
+
+- 'scroll'
+
+#Enable bimetrics if disabled and check if enabled, cancel if dis
+- tapOn:
+    id: 'SwitchBtn'
+    index: 0
+- runFlow:
+    when:
+      visible: 'Enable biometrics'
+    commands:
+      - tapOn: 'Enable'
+      - tapOn:
+          id: 'SwitchBtn'
+          index: 0
+      - assertVisible: 'Disable biometrics'
+      - tapOn: 'Cancel'
+- runFlow:
+    when:
+      visible: 'Disable biometrics'
+    commands:
+      - tapOn: 'Disable'
+      - tapOn:
+          id: 'SwitchBtn'
+          index: 0
+      - assertVisible: 'Enable biometrics'
+      - tapOn: 'Cancel'
+
+#Verify Notifical toogle
+- runFlow:
+    when:
+      visible:
+        id: 'SwitchBtn'
+        index: 1
+    commands:
+      - tapOn:
+          id: 'SwitchBtn'
+          index: 1
+      - runFlow: # Keep the notification toogle on if Enabled already
+          when:
+            visible: 'Disable notifications'
+          commands:
+            - tapOn: 'Cancel'
+      - runFlow:
+          when:
+            visible: 'Enable notifications'
+            visible: 
+              id: "modal-title"
+          commands:
+            - tapOn: 'Enable'
+            - assertVisible: 'All Pyypl-Mock notifications'
+            - tapOn:
+                id: 'android:id/switch_widget'
+            - tapOn: 'Navigate up'
+            - runFlow:
+                when: # fill in passcode
+                  visible:
+                    id: 'EnterPasscodeScreen'
+                commands:
+                  - tapOn:
+                      id: ${PASSCODE[0]}
+                  - tapOn:
+                      id: ${PASSCODE[1]}
+                  - tapOn:
+                      id: ${PASSCODE[2]}
+                  - tapOn:
+                      id: ${PASSCODE[3]}
+            - assertVisible:
+                id: 'coreText-Edit Profile'
+            - tapOn:
+                id: 'SwitchBtn'
+                index: 1
+            - runFlow:
+                when:
+                  visible: 'Disable notifications'
+                commands:
+                  - tapOn: 'Cancel'
+
+- scroll
+
+# Verify Linked devices screen navigation
+- tapOn:
+    id: 'coreText-linked-devices-setting-menu-label'
+- assertVisible: 'Currently logged-in'
+- tapOn:
+    id: 'BackButton'
+
+#Verify close account button is visible and enabled
+- assertVisible:
+    id: 'coreText-close-account-setting-menu-label'
+    enabled: true

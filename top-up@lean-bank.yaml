@@ -1,0 +1,39 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+onFlowStart:
+  - runScript: constants.js
+
+  - evalScript: ${output.tests=output.lean_bank.tests[output.user.country.countryCode]}
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- runFlow:
+    file: ./subflows/top-up/Lean-bank.yaml
+    env:
+      USERNAME: ${output.tests.username}
+      PASSWORD: ${output.tests.password}
+      OTP: ${output.tests.otp}
+      PASSCODE: ${output.user.passcode}

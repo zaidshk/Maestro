@@ -1,0 +1,217 @@
+appId: ""
+---
+
+- runFlow:
+    when:
+      visible:
+        id: "amountTo-amountCell-countrySelector-corebottomsheet-searchbar-textinput"
+    commands:
+      - tapOn:
+          id: "amountTo-amountCell-countrySelector-corebottomsheet-searchbar-textinput"
+      - inputText: ${BENEFICIARY_COUNTRY_NAME}
+      - runFlow:
+          when: #Handle Android keyboard
+            platform: Android
+          commands:
+            - runFlow: ../../subflows/components/keyboard.yaml
+      - runFlow:
+          when:
+            platform: iOS
+            visible:
+              text: "Send"
+          commands:
+            - tapOn:
+                text: "Send"
+      - assertVisible:
+          id: ${BENEFICIARY_COUNTRY_NAME}
+      - tapOn:
+          id: ${BENEFICIARY_COUNTRY_NAME}
+
+
+# pick the configured country in constants.js if not chosen already
+- runFlow:
+    when:
+      notVisible: ${BENEFICIARY_CURRENCY}
+    commands:
+      - tapOn:
+          id: 'amountTo-country-touchable'
+      - tapOn:
+          id: 'amountTo-amountCell-countrySelector-corebottomsheet-searchbar-textinput'
+      - inputText: '${BENEFICIARY_COUNTRY_NAME}'
+      - runFlow:
+          when:
+            platform: iOS
+            visible:
+              text: 'Send'
+          commands:
+            - tapOn:
+                text: 'Send'
+      - runFlow:
+          when: #Handle Android keyboard
+            platform: Android
+          commands:
+            - runFlow: ../../subflows/components/keyboard.yaml
+      - tapOn:
+          text: ${BENEFICIARY_CURRENCY}
+
+# Positive test to verify value changes in sender and beneficiary amount fields
+- runFlow:
+    when:
+      true: ${ output.test.level >= output.remittance.cases.amount_screen_assertion.level }
+      true: ${ output.remittance.cases.amount_screen_assertion.activated }
+    commands:
+      - assertVisible:
+          id: "amountFrom-amountCell-currency"
+          #Verify sender currency value changes
+      - tapOn:
+          id: "amountFrom-amountCell-currency"
+      - inputText: ${AMOUNT}
+      - copyTextFrom:
+          id: "amountTo-amountCell-currency"
+      - evalScript: ${output.amountToValue = parseInt(maestro.copiedText.split(" ").pop().replace(/,/g, ''), 10);}
+      - assertTrue: ${output.amountToValue > 0}
+
+      #Verify beneficiary currency value changes
+      - tapOn:
+          id: "amountTo-amountCell-currency"
+      - inputText: ${AMOUNT}
+      - copyTextFrom:
+          id: "amountFrom-amountCell-currency"
+      - evalScript: ${output.amountFromValue = parseInt(maestro.copiedText.split(" ")[3]);}
+      - assertTrue: ${output.amountFromValue > 0}
+
+
+- assertVisible:
+    id: "amountFrom-amountCell-currency"
+- tapOn:
+    id: "amountFrom-amountCell-currency"
+- inputText: ${AMOUNT}
+
+# Verify currency conversion label in AE is displayed
+- assertTrue: '\bAED 1 =\b'
+
+
+- tapOn:
+    id: "mode"
+- tapOn:
+    id: "CASH"
+- tapOn:
+    id: "coreText-nextLabel"
+- extendedWaitUntil:
+    visible: 
+      id: "beneficiaryFirstName-inputCell-value"
+    timeout: 45000
+- tapOn:
+    id: "beneficiaryFirstName-inputCell-value"
+- inputText: "John"
+- tapOn:
+    id: "beneficiaryLastName-inputCell-value"
+- inputText: "Doe"
+
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: "beneficiaryPhoneNumber-msisdn-textInput"
+      - inputText:
+          text: ${BENEFICIARY_PHONE_NUMBER}
+
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: 
+          text: "Phone number"
+      - inputText:
+          text: ${BENEFICIARY_PHONE_NUMBER}
+                
+
+# - runFlow:
+#     when:
+#       platform: iOS
+#       visible:
+#         text: "Return"
+#     commands:
+#       - tapOn:
+#           text: "Return"
+
+- runFlow:
+    when:
+      visible:
+        id: "beneficiaryRelationshipToSender"
+    commands:
+      - tapOn:
+          id: "beneficiaryRelationshipToSender"
+      - assertVisible:
+          id: "EMPL"
+      - tapOn:
+          id: "EMPL"
+
+- runFlow:
+    when:
+      visible:
+        id: "beneficiaryIdentityDocumentType"
+    commands:
+      - tapOn:
+          id: "beneficiaryIdentityDocumentType"
+      - assertVisible:
+          id: "CCPT"
+      - tapOn:
+          id: "CCPT"
+
+- runFlow:
+    when:
+      visible:
+        id: "beneficiaryIdentityDocumentNumber-inputCell-value"
+    commands:
+      - tapOn:
+          id: "beneficiaryIdentityDocumentNumber-inputCell-value"
+      - inputText:
+          text: ${DOCUMENT_NUMBER}
+      - runFlow:
+          when:
+            platform: Android
+            visible:
+              id: "com.google.android.inputmethod.latin:id/icon"
+          commands:
+            - tapOn:
+                id: "com.google.android.inputmethod.latin:id/icon"
+      - runFlow:
+          when:
+            platform: iOS
+            visible:
+              text: "Return"
+          commands:
+            - tapOn:
+                text: "Return"
+
+- scroll
+
+- runFlow:
+    when:
+      visible:
+        id: "paymentPurposeCode"
+    commands:
+      - tapOn:
+          id: "paymentPurposeCode"
+      - assertVisible:
+          id: "INTC"
+      - tapOn:
+          id: "INTC"
+
+- scroll
+
+- runFlow:
+    when:
+      visible:
+        id: "senderSourceOfCash"
+    commands:
+      - tapOn:
+          id: "senderSourceOfCash"
+      - assertVisible:
+          id: "SELF"
+      - tapOn:
+          id: "SELF"
+
+

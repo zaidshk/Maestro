@@ -1,0 +1,56 @@
+appId: ''
+---
+- tapOn:
+    id: 'ProfileBtn'
+- tapOn:
+    id: 'menu-item-inviteFriend'
+- tapOn:
+    id: 'coreText-shareInviteButtonLabel'
+
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - copyTextFrom:
+          id: 'android:id/content_preview_text'
+      - evalScript: ${output.url = maestro.copiedText.match(/https?:\/\/\S+/)[0];}
+      - launchApp:
+          appId: com.android.chrome
+          clearState: true
+          clearKeychain: true
+      # - launchApp: com.android.chrome
+      - tapOn:
+          id: 'com.android.chrome:id/signin_fre_dismiss_button'
+      - tapOn:
+          id: 'com.android.chrome:id/ack_button'
+      - tapOn:
+          id: 'com.android.chrome:id/search_box_text'
+      - inputText: ${ output.url }
+      - tapOn:
+          id: 'com.google.android.inputmethod.latin:id/key_pos_ime_action'
+      - assertVisible: 'Google Play logo'
+      - assertVisible: 'Install'
+      - stopApp: com.android.chrome
+      - launchApp: ${output.meta.app_bundle_id}
+      - runFlow:
+          when: # fill in passcode
+            visible:
+              id: 'EnterPasscodeScreen'
+          commands:
+            - tapOn:
+                id: ${output.user.passcode[0]}
+            - tapOn:
+                id: ${output.user.passcode[1]}
+            - tapOn:
+                id: ${output.user.passcode[2]}
+            - tapOn:
+                id: ${output.user.passcode[3]}
+      # land on home screen
+      - extendedWaitUntil:
+          notVisible:
+            id: 'EnterPasscodeScreen'
+          timeout: 70000
+      - assertNotVisible:
+          id: 'EnterPasscodeScreen'
+      - waitForAnimationToEnd:
+          timeout: 10000

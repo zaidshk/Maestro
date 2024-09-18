@@ -1,0 +1,50 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - INTL
+onFlowStart:
+  - runScript: constants.js
+
+  - evalScript: ${ output.tests=output.sourceـof_funds.tests[output.user.country.countryCode] }
+  - evalScript: ${ output.set1=output.sourceـof_funds.cases.data.set1 }
+  - evalScript: ${ output.set2=output.sourceـof_funds.cases.data.set2 }
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- runFlow:
+    file: ./subflows/settings/sourceof-funds.yaml
+    env:
+      OCCUPATION1: ${ output.set1.occupation1 }
+      SECTOR1: ${ output.set1.sector1 }
+      SUB_SECTOR1: ${ output.set1.sub_sector1 }
+      INCOME_RANGE1: ${ output.set1.income_range1 }
+      TURNOVER1: ${ output.set1.turnover1 }
+      SOURCE1: ${ output.set1.source1 }
+      OCCUPATION2: ${ output.set2.occupation2 }
+      SECTOR2: ${ output.set2.sector2 }
+      SUB_SECTOR2: ${ output.set2.sub_sector2 }
+      INCOME_RANGE2: ${ output.set2.income_range2 }
+      TURNOVER2: ${ output.set2.turnover2 }
+      SOURCE2: ${ output.set2.source2 }

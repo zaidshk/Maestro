@@ -1,0 +1,96 @@
+appId: ''
+---
+# - assertVisible:
+#     id: "ProfileBtn"
+# Maybe failing because of this
+
+- tapOn:
+    id: 'ProfileBtn'
+    retryTapIfNoChange: false
+
+- assertVisible:
+    id: 'menu-item-profile'
+
+- tapOn:
+    id: 'menu-item-profile'
+
+- assertVisible:
+    id: 'setting-item-language'
+
+- tapOn:
+    id: 'setting-item-language'
+
+- tapOn:
+    id: ProfileLanguageScreen-${LANGUAGE}
+
+- tapOn:
+    id: 'confirm-language-button'
+
+- extendedWaitUntil:
+    notVisible:
+      id: 'confirm-language-button'
+    timeout: 30000
+
+- extendedWaitUntil:
+    visible:
+      id: 'EnterPasscodeScreen'
+    timeout: 30000
+
+- assertNotVisible:
+    id: 'SplashScreen'
+
+- tapOn:
+    id: ${PASSCODE[0]}
+
+- tapOn:
+    id: ${PASSCODE[1]}
+
+- tapOn:
+    id: ${PASSCODE[2]}
+
+- tapOn:
+    id: ${PASSCODE[3]}
+
+- assertVisible:
+    id: MarketingListNativeDisplays-1
+
+- runFlow:
+    when:
+      true: ${LANGUAGE == 'Arabic'}
+    commands:
+      - swipe:
+          from:
+            id: MarketingListNativeDisplays-1
+          direction: RIGHT
+          duration: 100
+      - runFlow:
+          when:
+            platform: iOS
+          commands:
+            - swipe:
+                from:
+                  id: MarketingListNativeDisplays-2
+                direction: RIGHT
+                duration: 100
+
+- runFlow:
+    when:
+      true: ${LANGUAGE == 'English'}
+    commands:
+      - swipe:
+          from:
+            id: MarketingListNativeDisplays-1
+          direction: LEFT
+          duration: 100
+      - runFlow:
+          when:
+            platform: iOS
+          commands:
+            - swipe:
+                from:
+                  id: MarketingListNativeDisplays-2
+                direction: LEFT
+                duration: 100
+
+- assertVisible:
+    id: MarketingListNativeDisplays-4

@@ -1,0 +1,47 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - IN
+  - RU
+
+onFlowStart:
+  - runScript: constants.js
+  - evalScript: ${output.tests=output.crypto.tests[output.user.country.countryCode]}
+  - evalScript: ${output.amounts=output.crypto.amounts}
+  - evalScript: ${console.log(JSON.stringify(output.crypto.cases))}
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- repeat:
+    while:
+      'true': ${output.tests.length > 0}
+    commands:
+      - evalScript: ${output.test=output.tests[0]}
+      - runFlow:
+          file: ./subflows/send-money/crypto.yaml
+          env:
+            AMOUNT: ${output.crypto.cases.valid_amount.data.amount[output.user.currency]}
+            BEP20_ADDRESS: ${output.test.bep20address}
+            NICK_NAME: ${output.test.nick_name}
+      - evalScript: ${output.tests.shift()}

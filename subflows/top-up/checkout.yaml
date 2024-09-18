@@ -1,0 +1,99 @@
+appId: ''
+---
+- tapOn:
+    id: 'wallet-feature-Top up'
+
+- extendedWaitUntil:
+    visible:
+      id: 'topUpOverview-categoryButton-Debitcard-mode'
+
+- assertVisible:
+    id: 'topUpOverview-categoryButton-Debitcard-mode'
+
+- tapOn:
+    id: 'topUpOverview-categoryButton-Debitcard-mode'
+
+- runFlow:
+    when:
+      visible:
+        text: 'Bottom Sheet handle'
+    commands:
+      - tapOn:
+          id: 'cell-item-CHECKOUT_DEBIT_CARD'
+
+- runFlow:
+    when:
+      visible:
+        id: 'LoadPaymentMethodItem-current-changeButton'
+    commands:
+      - tapOn:
+          id: 'LoadPaymentMethodItem-current-changeButton'
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - tapOn:
+          id: 'coreText-AddCard-headerBar-actionText'
+
+# START RUN FLOW BASED ON TEST CASE
+- runFlow:
+    when:
+      true: ${TEST_CASE == "card_new"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: 'topUpAmountScreen-checkoutCard-cardNumber'
+          timeout: 60000
+      - tapOn:
+          id: 'topUpAmountScreen-checkoutCard-cardNumber'
+      - inputText: ${CARD_NUMBER}
+      - tapOn:
+          text: 'Done'
+      - tapOn:
+          id: 'topUpAmountScreen-checkoutCard-expiryDate'
+      - inputText: ${EXPIRY_DATE}
+      - tapOn:
+          text: 'Done'
+      - tapOn:
+          id: 'amountFrom-amountCell-headerLabel'
+      - tapOn:
+          id: 'topUpAmountScreen-checkoutCard-cvv'
+      - inputText: ${CVV}
+      - tapOn:
+          text: 'Done'
+
+- runFlow:
+    when:
+      true: ${TEST_CASE == "card_saved"}
+    commands:
+      - assertVisible:
+          id: 'LoadPaymentMethodItem-0'
+      - tapOn:
+          id: 'LoadPaymentMethodItem-0'
+# END RUN FLOW BASED ON TEST CASE
+
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          id: 'amountFrom-amountCell-currency'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: 'amountFrom-amountCell-textInput'
+- inputText: ${AMOUNT}
+- tapOn:
+    text: 'Done'
+- tapOn:
+    id: 'TopUpAmountsScreen-topUpButton'
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 45000
+- assertVisible:
+    text: 'Close'
+- tapOn:
+    text: 'Close'
+- assertVisible:
+    id: 'wallet-feature-Top up'

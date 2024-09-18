@@ -1,0 +1,48 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+onFlowStart:
+  - runScript: constants.js
+
+  - evalScript: ${output.tests=output.gift_cards.tests[output.user.country.countryCode]}
+
+  # Return back to Home screen if App is launched already
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- repeat:
+    while:
+      true: ${output.tests.length > 0}
+    commands:
+      - evalScript: ${output.test=output.tests[0]}
+      - runFlow:
+          file: ./subflows/giftery/giftcards.yaml
+          env:
+            TEST_LEVEL: ${output.test.level}
+            TEST_COUNTRY: ${output.test.country}
+            TEST_GIFT: ${output.test.gift}
+            TEST_CURRENCY: ${output.test.currency}
+            TEST_AMOUNT: ${output.test.amount_id}
+            TEST_COUNTRY_CODE: ${output.test.country_code}
+      - evalScript: ${output.tests.shift()}

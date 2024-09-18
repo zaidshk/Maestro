@@ -1,0 +1,38 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - IN
+  - DISABLED
+---
+- tapOn:
+    id: 'wallet-feature-Send'
+- tapOn:
+    id: 'BLOCK_CHAIN_OKTO_WALLET_TRANSFER-mode'
+- tapOn:
+    id: 'terms-and-conditions-read-action'
+# Commented because it's not working on Android
+# - assertVisible:
+#     text: 'Pyypl Kenya Limited Terms & Conditions (“Terms”)'
+- tapOn:
+    id: 'handle-bottomSheet'
+- tapOn:
+    id: 'checkbox'
+- tapOn:
+    id: 'accept-terms-button'
+- assertVisible:
+    text: 'Enter OKTO address'
+- tapOn:
+    id: 'BackButton'
+# Check that it skips the terms correctly
+- assertVisible:
+    id: 'BLOCK_CHAIN_OKTO_WALLET_TRANSFER-mode'
+- tapOn:
+    id: 'BLOCK_CHAIN_OKTO_WALLET_TRANSFER-mode'
+- assertVisible:
+    text: 'Enter OKTO address'
+- tapOn:
+    id: 'BackButton'
+- assertVisible:
+    id: 'BLOCK_CHAIN_OKTO_WALLET_TRANSFER-mode'
+- tapOn:
+    id: 'BackButton'

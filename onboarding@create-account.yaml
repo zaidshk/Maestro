@@ -1,0 +1,21 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - IN
+  - DISABLED
+onFlowStart:
+  - runScript: constants.js
+  - evalScript: ${ output.test=output.create_account.tests[output.user.country.countryCode] }
+  - evalScript: ${console.log(JSON.stringify(output.create_account))}
+  - runFlow: ./subflows/app/launch-cold.yaml
+---
+- runFlow:
+    file: ./subflows/onboarding/create-account.yaml
+    env:
+      NICKNAME: ${output.create_account.cases.new_account_details.data.nickname}
+      COUNTRY_CODE: ${output.user.country.countryCode}
+      CODE: ${output.user.country.value}
+      COUNTRY_NAME: ${output.user.country.countryName}
+      PHONE_NUMBER: ${output.test.new_phone_number}
+      PASSCODE: ${output.user.passcode}
+- stopApp: com.pyypl.${MAESTRO_ENV}

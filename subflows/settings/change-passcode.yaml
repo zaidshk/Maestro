@@ -1,0 +1,82 @@
+appId: ''
+---
+- tapOn:
+    id: 'ProfileBtn'
+- tapOn:
+    id: 'menu-item-profile'
+- scroll
+- tapOn:
+    id: 'coreText-passcode-setting-menu-label'
+- runFlow: # change passcode
+    when: # fill in passcode
+      visible:
+        id: 'coreText-Change Passcode'
+    commands:
+      - tapOn: # Old passcode
+          id: ${output.user.passcode[0]}
+      - tapOn:
+          id: ${output.user.passcode[1]}
+      - tapOn:
+          id: ${output.user.passcode[2]}
+      - tapOn:
+          id: ${output.user.passcode[3]}
+      - tapOn: # New passcode
+          id: ${ NEW_PASSCODE[0] }
+      - tapOn:
+          id: ${ NEW_PASSCODE[1] }
+      - tapOn:
+          id: ${ NEW_PASSCODE[2] }
+      - tapOn:
+          id: ${ NEW_PASSCODE[3] }
+      - tapOn: # Confirm  New passcode
+          id: ${ NEW_PASSCODE[0] }
+      - tapOn:
+          id: ${ NEW_PASSCODE[1] }
+      - tapOn:
+          id: ${ NEW_PASSCODE[2] }
+      - tapOn:
+          id: ${ NEW_PASSCODE[3] }
+      - assertVisible: 'Passcode changed'
+      - tapOn:
+          id: 'modal-button-Ok'
+
+# Back to Old passcode flow
+- tapOn:
+    id: 'ProfileBtn'
+- tapOn:
+    id: 'menu-item-profile'
+- scroll
+- tapOn:
+    id: 'coreText-passcode-setting-menu-label'
+- runFlow: # Back to Old passcode flow
+    when: # fill in passcode
+      visible:
+        id: 'coreText-Change Passcode'
+    commands:
+      - tapOn: # Old passcode
+          id: ${ NEW_PASSCODE[0] }
+      - tapOn:
+          id: ${ NEW_PASSCODE[1] }
+      - tapOn:
+          id: ${ NEW_PASSCODE[2] }
+      - tapOn:
+          id: ${ NEW_PASSCODE[3] }
+      - tapOn: # New passcode
+          id: ${output.user.passcode[0]}
+      - tapOn:
+          id: ${output.user.passcode[1]}
+      - tapOn:
+          id: ${output.user.passcode[2]}
+      - tapOn:
+          id: ${output.user.passcode[3]}
+      - tapOn: # Confirm  New passcode
+          id: ${output.user.passcode[0]}
+      - tapOn:
+          id: ${output.user.passcode[1]}
+      - tapOn:
+          id: ${output.user.passcode[2]}
+      - tapOn:
+          id: ${output.user.passcode[3]}
+      - assertVisible: 'Passcode changed'
+      - tapOn:
+          id: 'modal-button-Ok'

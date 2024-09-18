@@ -1,0 +1,44 @@
+appId: ""
+---
+- tapOn:
+    id: "profession"
+- assertVisible:
+    id: "profession0"
+- tapOn:
+    id: "profession0"
+- tapOn:
+    id: "sector"
+- assertVisible:
+    id: "sector0"
+- tapOn:
+    id: "sector0"
+- tapOn:
+    id: "subSector"
+- assertVisible:
+    id: "subSector0:0"
+- tapOn:
+    id: "subSector0:0"
+- tapOn:
+    id: "incomeRange"
+- assertVisible:
+    id: "incomeRangeFrom1000100To1500000"
+- tapOn:
+    id: "incomeRangeFrom1000100To1500000"
+- tapOn:
+    id: "sourceOfFunds"
+- assertVisible:
+    id: "sourceOfFunds0"
+- tapOn:
+    id: "sourceOfFunds0"
+- scrollUntilVisible:
+    element:
+      id: "sourceOfFunds-next-button"
+    direction: "DOWN"
+    timeout: 50000
+    speed: 40
+    visibilityPercentage: 100
+    centerElement: false
+- tapOn:
+    id: "sourceOfFunds-next-button"
+- tapOn:
+    id: "modal-button-Okay"

@@ -1,0 +1,473 @@
+appId: ""
+---
+# Verify P2P flow for existing contact in the phonebook
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.existing_contact.level }
+      #true: ${ output.pyypl_to_pyypl.cases.existing_contact.activated }
+    commands:
+      - runFlow: ../components/add-contacts.yaml
+      - launchApp: ${output.meta.app_bundle_id}
+      - assertNotVisible: # do not proceed until splash screen is gone
+          id: "SplashScreen"
+      - waitForAnimationToEnd:
+                timeout: 10000
+      - runFlow:
+          when:
+            visible:
+              id: "coreText-LoginBtnLabel"
+          commands:
+            - runFlow:
+                file: ../auth/sign-in.yaml
+                env:
+                  COUNTRY_CODE: ${ output.user.country.countryCode }
+                  CODE: ${ output.user.country.value }
+                  COUNTRY_NAME: ${ output.user.country.countryName }
+                  PHONE_NUMBER: ${ output.user.phone_number }
+                  PASSCODE: ${ output.user.passcode }
+      - runFlow:
+          when: # fill in passcode
+            visible:
+              id: "EnterPasscodeScreen"
+          commands:
+            - tapOn:
+                id: ${output.user.passcode[0]}
+            - tapOn:
+                id: ${output.user.passcode[1]}
+            - tapOn:
+                id: ${output.user.passcode[2]}
+            - tapOn:
+                id: ${output.user.passcode[3]}
+      # land on home screen
+      - extendedWaitUntil:
+          notVisible:
+            id: 'EnterPasscodeScreen'
+          timeout: 70000
+      - assertNotVisible:
+          id: 'EnterPasscodeScreen'
+      - waitForAnimationToEnd:
+          timeout: 10000
+      - extendedWaitUntil:
+          visible: 
+            id: "wallet-feature-Send"
+          timeout: 10000
+      - tapOn:
+          id: "wallet-feature-Send"
+      - tapOn:
+          id: "PYYPL_TO_PYYPL-mode"
+      - tapOn:
+          id: "PYYPL_TO_PYYPL-mode"
+          optional: true
+      - assertVisible: .*John Doe.*
+      - tapOn:
+          text: JD John Doe +971561570201
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - assertVisible:
+          id:  "amountFrom-amountCell-currency"
+      - tapOn:
+          id: "BackButton"
+      - tapOn:
+          id: "BackButton"
+      - tapOn:
+          id: "BackButton"
+          
+
+- waitForAnimationToEnd:
+    timeout: 10000
+- extendedWaitUntil:
+    visible: 
+      id: "wallet-feature-Send"
+    timeout: 10000
+- tapOn:
+    id: "wallet-feature-Send"
+
+- tapOn:
+    id: "PYYPL_TO_PYYPL-mode"
+
+- runFlow:
+    when:
+      visible:
+        text: "Allow"
+    commands: 
+      - tapOn:
+          text: "Allow"
+
+- runFlow:
+    when:
+      visible:
+        text: "OK"
+    commands: 
+      - tapOn:
+          text: "OK"
+
+
+# negative test for send money to own account
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.own_number.level }
+      true: ${ output.pyypl_to_pyypl.cases.own_number.activated }
+    commands:
+      - tapOn:
+          id: "CountryCode"
+      - tapOn:
+          id: "SearchInput"
+      - inputText: ${ USER_COUNTRY_NAME }
+      - tapOn:
+          id: ${ USER_COUNTRY_NAME }
+      - tapOn:
+          id: ${ USER_COUNTRY_NAME }
+      - tapOn:
+          id: "PhoneInput"
+      - inputText: ${ USER_PHONE_NUMBER }
+      - tapOn:
+          id: "ContinueBtn"
+      - assertVisible: "You cannot send money to your own pyypl account"
+      - tapOn:
+          id: "modal-button-OK"
+      - eraseText: 12
+
+# negative test for unregistered user check
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.unregistered.level }
+      true: ${ output.pyypl_to_pyypl.cases.unregistered.activated }
+    commands:
+      - tapOn:
+          id: "CountryCode"
+      - tapOn:
+          id: "SearchInput"
+      - inputText: "United Arab Emirates"
+      - tapOn:
+          id: "United Arab Emirates"
+      - tapOn:
+          id: "United Arab Emirates"
+      - tapOn:
+          id: "PhoneInput"
+      - inputText: 776584671
+      - tapOn:
+          id: "ContinueBtn"
+      - assertVisible: "Not there yet"
+      - tapOn:
+          id: "modal-button-Cancel"
+      - tapOn:
+          id: "PhoneInput"
+      - eraseText: 12
+
+
+# pick the configured country if not chosen already
+- runFlow:
+    file: ../components/pick-country.yaml
+    env:
+      COUNTRY_CODE: ${BENEFICIARY_COUNTRY_CODE}
+      CODE: ${BENEFICIARY_CODE}
+      COUNTRY_NAME: ${BENEFICIARY_COUNTRY_NAME}
+
+- tapOn:
+    id: "PhoneInput"
+
+- inputText: ${BENEFICIARY_PHONE_NUMBER}
+
+- tapOn:
+    id: "ContinueBtn"
+
+- extendedWaitUntil:
+    visible:
+      id: "amountFrom-amountCell-currency"
+    timeout: 60000
+
+# negative test to check if user is being blocked from proceeding because of exceeding maximum amount
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.maximum.level }
+      true: ${ output.pyypl_to_pyypl.cases.maximum_amount.activated }
+    commands:
+      - tapOn:
+          id: "amountFrom-amountCell-currency"
+      - inputText: ${ AMOUNT_MAXIMUM }
+      - assertNotVisible:
+          id: "coreText-nextLabel"
+          enabled: false
+
+# negative test to check if user is being blocked from proceeding because of lower than minimum amount
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.minimum.level }
+      true: ${ output.pyypl_to_pyypl.cases.minimum_amount.activated }
+    commands:
+      - tapOn:
+          id: "amountFrom-amountCell-currency"
+      - inputText: ${ AMOUNT_MINIMUM }
+      - assertVisible:
+          text: .*Min Amount:.*
+
+# postive test to verify fee label is displayed on applicable amount range
+# test case applied for same currency - to - same currency fees check only
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.fees_applicable.level }
+      true: ${ output.pyypl_to_pyypl.cases.fees_applicable.activated }
+    commands:
+      - tapOn:
+          id: "amountFrom-amountCell-currency"
+      - inputText: ${FEES_APPLICABLE}
+      - runFlow:
+          when:
+            true: ${USER_CURRENCY === BENEFICIARY_CURRENCY}
+          commands:
+            - assertVisible:
+                text: '.*Fees:.*'
+
+# verify no fee label is not displayed on not_applicable amount range
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.fees_not_applicable.level }
+      true: ${ output.pyypl_to_pyypl.cases.fees_not_applicable.activated }
+    commands:
+      - assertVisible:
+          id: "amountFrom-amountCell-currency"
+      - tapOn:
+          id: "amountFrom-amountCell-currency"
+      - inputText: ${FEES_NOT_APPLICABLE}
+      - assertNotVisible:
+          text: '.*Fees:.*'
+
+
+# postive test to verify fee label for USD to USD - Russia - works
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.INTL_fees_applicable.level }
+      true: ${ output.pyypl_to_pyypl.cases.INTL_fees_applicable.activated }
+    commands:
+      - assertVisible:
+          id: "amountFrom-amountCell-currency"
+      - tapOn:
+          id: "amountFrom-amountCell-currency"
+      - inputText: 10
+      - assertVisible:
+          text: .*Fees:\s+\$.*
+
+
+# positive test to Assert Amount screen  components - works
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.component_assertion.level }
+      true: ${ output.pyypl_to_pyypl.cases.component_assertion.activated }
+    commands:
+      - assertVisible:
+          id: "coreText-amount-headerBar-actionText"
+      - assertVisible:
+          id: "pyypl-contact"
+      - assertVisible:
+          id: "amountFrom-amountCell-headerLabel"
+      - assertVisible:
+          id: "amountFrom-amountCell-currency"
+      - runFlow:
+          when:
+            true: ${USER_CURRENCY !== BENEFICIARY_CURRENCY}
+          commands:
+            - assertVisible:
+                id: "amountTo-amountCell-headerLabel"
+            - assertVisible:
+                id: "amountTo-amountCell-currency"
+
+- tapOn:
+    id: "amountFrom-amountCell-currency"
+
+- inputText: ${ AMOUNT_VALID }
+
+- tapOn:
+    text: "Done"
+
+- tapOn:
+    id: "next"
+
+# positive test to benficiary details components
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.component_assertion.level }
+      true: ${ output.pyypl_to_pyypl.cases.component_assertion.activated }
+    commands:
+      - assertVisible:
+          id: "coreText-beneficiary-headerBar-title"
+      - assertVisible:
+          id: "contact"
+      - assertVisible:
+          id: "coreText-details-headerBar-title"
+      - scrollUntilVisible:
+          element:
+            id: "amountFrom-itemCell-copy"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "countryTo-itemCell-label"
+          optional: true
+      - assertVisible:
+          id: "countryTo-itemCell-value"
+          optional: true
+      - assertVisible:
+          id: "amountFrom-itemCell-label"
+      - assertVisible:
+          id: "amountFrom-itemCell-copy"
+      - scrollUntilVisible:
+          element:
+            id: "amountTo-itemCell-label"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "amountTo-itemCell-label"
+      - assertVisible:
+          id: "amountTo-itemCell-value"
+      - runFlow:
+          when:
+            true: ${USER_CURRENCY !== BENEFICIARY_CURRENCY}
+          commands:
+            - assertVisible:
+                id: "rate-itemCell-label"
+                optional: true
+            - assertVisible:
+                id: "rate-itemCell-value"
+                optional: true
+      - scrollUntilVisible:
+          element:
+            id: "total-itemCell-value"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "fee-itemCell"
+      - assertVisible:
+          id: "fee-itemCell-value"
+      - assertVisible:
+          id: "total-itemCell-label"
+      - assertVisible:
+          id: "total-itemCell-value"
+
+
+- tapOn:
+    id: "next"
+
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- extendedWaitUntil:
+    notVisible: 
+      id: "LottieAnimation"
+    timeout: 60000
+
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- runFlow:
+    when:
+      visible:
+        id: "modal-button-OK"
+    commands: 
+      - tapOn:
+          id: "modal-button-OK"
+
+# positive test to Assert receipt screen components Russia-AE - works
+- runFlow:
+    when:
+      true: ${ TEST_LEVEL >= output.pyypl_to_pyypl.cases.component_assertion.level }
+      true: ${ output.pyypl_to_pyypl.cases.component_assertion.activated }
+    commands:
+      - assertVisible:
+          id: "coreText-viewHeader-title"
+      - assertVisible:
+          id: "coreText-beneficiary-headerBar-title"
+      - tapOn:
+          id: "contact"
+      - assertVisible:
+          id: "coreText-details-headerBar-title"
+      - assertVisible:
+          id: "status-itemCell-copy"
+      - assertVisible:
+          id: "id-itemCell"
+      - scrollUntilVisible:
+          element:
+            id: "amountFrom-itemCell-value"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "countryTo-itemCell-label"
+          optional: true
+      - assertVisible:
+          id: "countryTo-itemCell-value"
+          optional: true
+      - assertVisible:
+          id: "amountFrom-itemCell-label"
+      - assertVisible:
+          id: "amountFrom-itemCell-value"
+      - assertVisible:
+          id: "amountTo-itemCell-label"
+      - assertVisible:
+          id: "amountTo-itemCell-value"
+          optional: true
+      - scrollUntilVisible:
+          element:
+            id: "fee-itemCell-value"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - runFlow:
+          when:
+            true: ${USER_CURRENCY !== BENEFICIARY_CURRENCY}
+          commands:
+            - assertVisible:
+                id: "rate-itemCell-label"
+                optional: true
+            - assertVisible:
+                id: "rate-itemCell-value"
+                optional: true
+      - assertVisible:
+          id: "fee-itemCell-label"
+          optional: true
+      - assertVisible:
+          id: "fee-itemCell-value"
+          optional: true
+      - assertVisible:
+         id: "total-itemCell-label"
+      - scrollUntilVisible:
+          element:
+            id: "coreText-Text"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+         id: "total-itemCell-value"
+      - assertVisible:
+          id: "coreText-Text"
+
+
+- runFlow:
+    when:
+      visible:
+        id: "backHome"
+    commands: 
+      - tapOn:
+          id: "backHome"
+
+
+
+
+
+
+
+
+    

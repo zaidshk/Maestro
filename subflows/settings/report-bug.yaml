@@ -1,0 +1,41 @@
+appId: com.pyypl.${MAESTRO_ENV}
+---
+- tapOn:
+    id: 'ProfileBtn'
+- tapOn:
+    id: 'menu-item-report'
+- assertVisible:
+    id: 'coreText-undefined-title'
+- tapOn:
+    id: 'coreText-ReportBugCategory-optionCell-placeholder'
+- tapOn: App is crashing
+- assertNotVisible:
+    text: 'Submit'
+    enabled: false
+- tapOn:
+    id: ReportBugDescriptionTextInput
+- inputText: Test description to report a bug
+- assertVisible:
+    id: 'coreText-SubmitBtnLabel'
+    enabled: true
+- runFlow:
+    when:
+      true: ${output.meta === "dev" || output.meta === "mock"}
+    commands:
+      - scroll
+      - scrollUntilVisible:
+          element:
+            id: 'coreText-Text'
+            index: 0
+          direction: 'DOWN'
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: true
+      - tapOn: Zaid Shaikh
+- tapOn:
+    id: coreText-SubmitBtnLabel
+- assertVisible:
+    id: modal-title
+
+- tapOn: Ok

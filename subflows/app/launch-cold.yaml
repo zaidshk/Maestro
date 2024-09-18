@@ -1,0 +1,62 @@
+appId: ''
+---
+- launchApp:
+    appId: ${output.meta.app_bundle_id}
+    clearState: true
+    clearKeychain: true
+    stopApp: true
+    permissions:
+      all: allow
+      notifications: deny
+
+- waitForAnimationToEnd:
+    timeout: 300000 # added app build time
+
+- tapOn:
+    text: 'Allow'
+    optional: true
+
+- extendedWaitUntil:
+    visible:
+      id: 'coreText-LoginBtnLabel'
+    timeout: 300000
+
+- assertVisible:
+    id: 'coreText-LoginBtnLabel'
+
+- extendedWaitUntil:
+    notVisible:
+      id: 'SplashScreen'
+    timeout: 300000
+
+- assertNotVisible: # do not proceed until splash screen is gone
+    id: 'SplashScreen'
+
+# handle permissions
+- runFlow:
+    when:
+      platform: iOS
+      visible:
+        text: 'Allow'
+    commands:
+      - tapOn:
+          text: 'Allow'
+
+# handle permissions
+- runFlow:
+    when:
+      platform: iOS
+      visible:
+        text: 'Allow'
+    commands:
+      - tapOn:
+          text: 'Allow'
+
+# handle Android
+- runFlow:
+    when:
+      visible:
+        id: 'com.android.permissioncontroller:id/permission_allow_button'
+    commands:
+      - tapOn:
+          id: 'com.android.permissioncontroller:id/permission_allow_button'

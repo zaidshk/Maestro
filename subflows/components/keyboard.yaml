@@ -1,0 +1,9 @@
+appId: ''
+---
+- tapOn:
+    id: 'com.android.systemui:id/back'
+    optional: true
+
+- tapOn:
+    id: 'android:id/input_method_nav_back'
+    optional: true

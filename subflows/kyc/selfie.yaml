@@ -1,0 +1,3 @@
+appId: ""
+---
+- evalScript: ${console.log("build the auth kyc selfie flow here please")}

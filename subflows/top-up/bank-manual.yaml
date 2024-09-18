@@ -1,0 +1,89 @@
+appId: ''
+---
+- tapOn:
+    id: 'wallet-feature-Top up'
+- extendedWaitUntil:
+    visible:
+      id: 'topUpOverview-categoryButton-Banktransfer-mode'
+- assertVisible:
+    id: 'topUpOverview-categoryButton-Banktransfer-mode'
+- tapOn:
+    id: 'topUpOverview-categoryButton-Banktransfer-mode'
+
+- runFlow: #handle id for Android
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: 'cell-item-manualBankTransfer'
+
+- runFlow: # handle id for iOS
+    when:
+      platform: iOS
+    commands:
+      - assertVisible:
+          id: 'cell-item-manualBankTransfer'
+      - tapOn:
+          id: 'cell-item-manualBankTransfer'
+- assertVisible:
+    id: 'coreText-Text'
+    index: 0
+- assertVisible:
+    id: 'ManualBankAmountInput'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: 'ManualBankAmountInput'
+- inputText: ${AMOUNT}
+- assertVisible:
+    id: 'NextBtn'
+    enabled: true
+- tapOn:
+    id: 'NextBtn'
+- assertVisible:
+    id: 'coreText-Top-up'
+- scrollUntilVisible:
+    element:
+      id: 'TextInput'
+    direction: 'DOWN'
+    timeout: 50000
+    speed: 40
+    visibilityPercentage: 100
+    centerElement: false
+- tapOn:
+    id: 'TextInput'
+- inputText: ${TRANSACTION_ID}
+- runFlow:
+    when:
+      platform: iOS
+      visible:
+        id: 'Done'
+    commands:
+      - tapOn:
+          id: 'Done'
+- scrollUntilVisible:
+    element:
+      id: 'NextBtn'
+    direction: 'DOWN'
+    timeout: 50000
+    speed: 40
+    visibilityPercentage: 100
+    centerElement: false
+- assertVisible:
+    id: 'NextBtn'
+    enabled: true
+- tapOn:
+    id: 'NextBtn'
+- waitForAnimationToEnd:
+    timeout: 10000
+- assertVisible:
+    id: 'coreText-ManualBankConfirmationScreen-title'
+- waitForAnimationToEnd:
+    timeout: 10000
+- assertVisible:
+    id: 'CloseBtn'
+    enabled: true
+- assertNotVisible:
+    id: 'LottieAnimation'
+- tapOn:
+    id: 'CloseBtn'

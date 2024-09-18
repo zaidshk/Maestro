@@ -1,0 +1,119 @@
+appId: ''
+---
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Cards'
+
+#Making sure expected card is on screen
+- runFlow:
+    when:
+      notVisible:
+        text: '**** **** **** ${ LAST_4_DIGITS }'
+    commands:
+      - scrollUntilVisible:
+          element:
+            text: '**** **** **** ${ LAST_4_DIGITS }'
+          direction: 'RIGHT'
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: true
+
+- runFlow:
+    when:
+      visible: ${ NAME1 }
+    commands: #Assert card details
+      - tapOn:
+          id: 'CardDetailsBtn'
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - assertVisible: '${ CARDNUMBER }'
+      - assertVisible: ${ NAME1 }
+      - assertVisible: '${ EXPIRY }'
+      - assertVisible: '${ CVV }'
+      - tapOn:
+          id: 'CardDetailsBtn'
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - tapOn: #Assert Card freez and Unfreez options
+          id: CardFreezeBtn
+      - assertVisible: 'Unfreeze'
+      - assertVisible: 'Your card is frozen'
+      - tapOn:
+          id: 'CardFreezeBtn'
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - assertVisible:
+          id: 'modal-button-Unfreeze'
+      - tapOn:
+          id: 'modal-button-Unfreeze'
+      - assertNotVisible: 'Your card is frozen'
+      - tapOn:
+          id: 'CardSettingBtn'
+      - tapOn:
+          id: 'selectItem-customizeCard'
+      - assertVisible: #Assert editing name under settings
+          text: ${ NAME1 }
+          index: 1
+      - tapOn:
+          id: 'NameInput'
+      - eraseText: 20
+      - inputText: ${ NAME2 }
+
+      - runFlow:
+          when: #Handle Android keyboard
+            platform: Android
+          commands:
+            - runFlow: ../../subflows/components/keyboard.yaml
+
+      - runFlow:
+          when:
+            platform: iOS
+          commands:
+            - tapOn:
+                text: 'return'
+
+      - tapOn:
+          id: 'coreText-ConfirmBtnLabel'
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - assertVisible:
+          id: 'CardNameTxt'
+          index: 0
+      - assertVisible: ${ NAME2 }
+      #Reverse the settings/Name
+      - tapOn:
+          id: 'CardSettingBtn'
+      - tapOn:
+          id: 'selectItem-customizeCard'
+      - assertVisible: #Assert editing name under settings
+          text: ${ NAME2 }
+          index: 1
+      - tapOn:
+          id: 'NameInput'
+      - eraseText: 20
+      - inputText: ${ NAME1 }
+
+      - runFlow:
+          when: #Handle Android keyboard
+            platform: Android
+          commands:
+            - runFlow: ../../subflows/components/keyboard.yaml
+
+      - runFlow:
+          when:
+            platform: iOS
+          commands:
+            - tapOn:
+                text: 'return'
+
+      - tapOn:
+          id: 'coreText-ConfirmBtnLabel'
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - assertVisible:
+          id: 'CardNameTxt'
+          index: 0
+      - assertVisible: ${ NAME1 }
+
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Home'

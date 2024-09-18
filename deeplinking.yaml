@@ -1,0 +1,36 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - DISABLED
+onFlowStart:
+  - runScript: constants.js
+
+  - evalScript: ${ output.tests=output.deeplinking.tests[output.user.country.countryCode] }
+
+  - runFlow:
+      when:
+        notVisible:
+          id: "wallet-feature-Send"
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- repeat:
+    while:
+      true: ${ output.tests.length > 0 }
+    commands:
+      - evalScript: ${ output.test=output.tests[0] }
+      - runFlow:
+          file: ./subflows/deeplinks/assert-links.yaml
+          env:
+            TEST_LEVEL: ${output.test.level}
+            DEEPLINK: ${output.test.url}
+            TEXT: ${output.test.element}
+      - evalScript: ${ output.tests.shift() }

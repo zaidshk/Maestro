@@ -1,0 +1,87 @@
+appId: ''
+---
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Hub'
+- tapOn:
+    id: 'mode_scr.9000_hub.gift_card_option-mode'
+- tapOn:
+    id: 'coreText-ButtonLabel'
+    optional: true
+
+# Search Gift card
+- tapOn: 'Search'
+- inputText: ${ TEST_GIFT }
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+- tapOn:
+    id: 'CardTile-ListRenderItemInfo'
+- tapOn: 'Country'
+- extendedWaitUntil:
+    visible:
+      id: 'corebottomsheet-searchbar-textinput'
+    timeout: 40000
+- tapOn:
+    id: 'corebottomsheet-searchbar-textinput'
+- inputText: ${ TEST_COUNTRY }
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+- tapOn:
+    id: ${ TEST_COUNTRY_CODE }
+- tapOn:
+    id: 'coreText-optionCell-label'
+
+# Select Country & amount for Gift card
+- assertVisible: ${ TEST_CURRENCY }.*
+- tapOn:
+    id: ${ TEST_AMOUNT }
+- tapOn:
+    id: 'coreText-ButtonLabel'
+
+# Assert Gift card related details
+- assertVisible: ${ TEST_COUNTRY }
+- assertVisible: ${ TEST_GIFT }
+- assertVisible: ${ TEST_CURRENCY }.*
+- tapOn:
+    id: 'coreText-ButtonLabel'
+- tapOn:
+    id: 'coreText-ButtonLabel'
+- assertVisible:
+    id: 'coreText-Text'
+    index: 7
+- assertVisible:
+    id: 'coreText-ButtonLabel'
+    index: 0
+- assertVisible: ${ TEST_COUNTRY }
+- assertVisible: ${ TEST_GIFT }
+
+#Show/Assert gift card details after purchasing
+- tapOn: 'Show gift card'
+- tapOn: 'Get Code'
+- tapOn:
+    id: 'modal-button-Ok' # Redem code is not working for some gift cards, fix the script later
+    optional: true
+- tapOn:
+    id: 'coreText-ButtonLabel'
+    optional: true
+- tapOn:
+    id: 'modal-button-Cancel'
+    optional: true
+
+# Navigate back to Homepage
+- tapOn:
+    id: 'BackButton'
+    optional: true
+- tapOn:
+    id: 'BackButton'
+    optional: true
+- tapOn:
+    id: 'BackButton'
+    optional: true
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Home'

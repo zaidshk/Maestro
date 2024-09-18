@@ -1,0 +1,19 @@
+appId: ''
+---
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Hub'
+- tapOn:
+    id: 'mode_scr.9000_hub.mercuryo_name-mode'
+- tapOn:
+    id: 'coreText-ButtonLabel'
+- tapOn:
+    id: 'coreText-ButtonLabel'
+    optional: true
+- tapOn:
+    text: 'Buy USDT (TRC20)'
+    index: 1
+- tapOn:
+    id: 'mercuryo-depositAddress-inputDepositAddressCell-textInput'
+- inputText: ${ TRC20 }
+- tapOn:
+    id: 'coreText-ButtonLabel'

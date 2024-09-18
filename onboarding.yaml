@@ -1,0 +1,29 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - DISBALED
+onFlowStart:
+  - runScript: constants.js
+  - evalScript: ${console.log(JSON.stringify(output.onboarding))}
+  - runFlow: ./subflows/app/launch-cold.yaml
+---
+- runFlow:
+    file: ./subflows/auth/sign-up.yaml
+    env:
+      COUNTRY_CODE: ${output.onboarding.country.countryCode}
+      CODE: ${output.onboarding.country.value}
+      COUNTRY_NAME: ${output.onboarding.country.countryName}
+      PHONE_NUMBER: ${output.onboarding.phone_number}
+      PASSCODE: ${output.onboarding.passcode}
+- tapOn:
+    id: 'ActionCard-card-touchable'
+- assertVisible:
+    id: 'KYCStateScreen-callToAction-verifyAgain'
+- tapOn:
+    id: 'KYCStateScreen-callToAction-verifyAgain'
+- runFlow: './subflows/kyc/source-of-funds.yaml'
+- runFlow: './subflows/kyc/address-info.yaml'
+- runFlow: './subflows/kyc/proof-of-address.yaml'
+- runFlow: './subflows/kyc/id-document.yaml'
+- runFlow: './subflows/kyc/selfie.yaml'
+# TODO: need changes in FE/BE to finish the KYC flow because of selfie and other constraints
+# TODO: the parts that do work in KYC only for AE flow

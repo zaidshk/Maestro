@@ -1,0 +1,55 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - IN
+
+#Fails in iOS , can't click on change button to add card in iOS nested element
+
+onFlowStart:
+  - runScript: constants.js
+
+  - evalScript: ${output.tests=output.checkout.tests[output.user.country.countryCode]}
+
+  - evalScript: ${output.amounts=output.checkout.cases.amounts}
+
+  - evalScript: ${output.cards=output.checkout.cases.cards}
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- repeat:
+    while:
+      true: ${output.tests.length > 0}
+    commands:
+      - evalScript: ${output.test=output.tests[0]}
+      - runFlow:
+          file: ./subflows/top-up/checkout.yaml
+          env:
+            TEST_LEVEL: ${output.test.level}
+            TEST_CASE: ${output.test.mode}
+            CARD_NUMBER: ${output.cards.valid.card_number}
+            EXPIRY_DATE: ${output.cards.valid.expiry_month + output.cards.valid.expiry_year}
+            CVV: ${output.cards.valid.cvv}
+            AMOUNT: ${output.amounts.valid[output.user.currency]}
+      - evalScript: ${output.tests.shift()}

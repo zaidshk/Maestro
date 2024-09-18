@@ -1,0 +1,3 @@
+appId: ""
+---
+- evalScript: ${console.log("build the auth kyc proof of address flow here please")}

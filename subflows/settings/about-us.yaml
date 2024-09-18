@@ -1,0 +1,148 @@
+appId: ''
+---
+# navaigte to settings
+- tapOn:
+    id: 'imageSVG-icon'
+- scrollUntilVisible:
+    element:
+      text: 'About Us'
+      index: 1
+    direction: 'DOWN'
+    timeout: 50000
+    speed: 40
+    visibilityPercentage: 100
+    centerElement: false
+
+# Verigy About us page
+- tapOn:
+    text: 'About Us'
+    index: 1
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: 'coreText-About us'
+- assertVisible: 'Pyypl – it’s your money'
+- assertVisible: 'Pyypl is safe, secure, and 100% compliant with all regulatory requirements.'
+- tapOn:
+    id: 'BackButton'
+
+# Verify Privacy policy Page
+- tapOn: 'Privacy Policy'
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: 'coreText-Privacy Policy'
+- assertVisible:
+    text: 'Privacy policy'
+    index: 1
+- scrollUntilVisible:
+    element:
+      text: '10. Legitimate interest: Pyypl processes your personal data for it’s legitimate interests. We have considered this processing to be necessary for the purposes of the legitimate interests pursued by Pyypl, which we have considered to not override your fundamental rights or freedoms associated with your personal data (e.g. to develop, examine and improve our business and services and you user experience by participating surveys, analyses, or statistics).'
+    direction: 'DOWN'
+    timeout: 50000
+    speed: 40
+    visibilityPercentage: 100
+    centerElement: false
+- assertVisible: '10. Legitimate interest: Pyypl processes your personal data for it’s legitimate interests. We have considered this processing to be necessary for the purposes of the legitimate interests pursued by Pyypl, which we have considered to not override your fundamental rights or freedoms associated with your personal data (e.g. to develop, examine and improve our business and services and you user experience by participating surveys, analyses, or statistics).'
+- tapOn:
+    id: 'BackButton'
+
+# Verify Terms & Conditions Page
+- tapOn: 'Terms & conditions'
+- assertVisible:
+    id: 'coreText-Terms and Conditions'
+- assertVisible: 'PYYPL CUSTOMER TERMS OF USE'
+- scrollUntilVisible:
+    element:
+      text: 'You need to report any transaction or profile errors or other account problems immediately to Pyypl customer care via your Pyypl App immediately.'
+    direction: 'DOWN'
+    timeout: 50000
+    speed: 20
+    visibilityPercentage: 100
+    centerElement: false
+- assertVisible: 'You need to report any transaction or profile errors or other account problems immediately to Pyypl customer care via your Pyypl App immediately.'
+- tapOn:
+    id: 'BackButton'
+
+# verify Fees page and tab functionality
+- tapOn: 'Fees'
+- assertVisible:
+    id: 'coreText-Fees'
+- tapOn:
+    text: 'Account'
+    enabled: true
+
+- tapOn:
+    text: 'Top up'
+    enabled: true
+- assertVisible: 'Top up (incl. VAT)'
+- swipe:
+    from:
+      text: 'Top up'
+      enabled: true
+    direction: LEFT
+
+- tapOn:
+    text: 'Virtual Card'
+    enabled: true
+- assertVisible: 'Virtual Card (incl. VAT)'
+- swipe:
+    from:
+      text: 'Virtual Card'
+      enabled: true
+    direction: LEFT
+
+- tapOn:
+    text: 'Physical Card'
+    enabled: true
+- assertVisible: 'Physical Card (incl. VAT)'
+- swipe:
+    from:
+      text: 'Physical Card'
+      enabled: true
+    direction: LEFT
+
+- tapOn:
+    text: 'Card transactions'
+    enabled: true
+- assertVisible: 'Card transactions (incl. VAT)'
+- swipe:
+    from:
+      text: 'Card transactions'
+      enabled: true
+    direction: LEFT
+
+- tapOn:
+    text: 'Withdrawal'
+    enabled: true
+- assertVisible: 'Withdrawal (incl. VAT)'
+- swipe:
+    from:
+      text: 'Withdrawal'
+      enabled: true
+    direction: LEFT
+
+- tapOn:
+    text: 'Send Money - Pyypl Wallet'
+    enabled: true
+- assertVisible: 'Send Money - Pyypl Wallet (incl. VAT)'
+- swipe:
+    from:
+      text: 'Send Money - Pyypl Wallet'
+      enabled: true
+    direction: LEFT
+
+- tapOn:
+    text: 'Send Money - Remittances'
+    enabled: true
+- assertVisible: 'Send Money - Remittances (incl. VAT)'
+- swipe:
+    from:
+      text: 'Send Money - Remittances'
+      enabled: true
+    direction: LEFT
+
+- tapOn:
+    text: 'Local Wallet'
+    enabled: true
+- assertVisible: 'Local Wallet (incl. VAT)'

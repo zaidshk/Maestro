@@ -1,0 +1,220 @@
+appId: ''
+---
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Cards'
+
+- runFlow:
+    when:
+      visible:
+        id: 'GetNewCard'
+    commands:
+      - tapOn:
+          id: 'GetNewCard'
+
+# - runFlow:
+#     when: #Handle Android id
+#       platform: Android
+#     commands:
+#       - tapOn:
+#           text: '+ New card' #issues found in android while using id here
+#           retryTapIfNoChange: false
+
+# - runFlow:
+#     when: # handle iOS id
+#       platform: iOS
+#     commands:
+#       - tapOn:
+#           id: 'coreText-Text'
+#           index: 0
+
+- tapOn:
+    id: 'GetAnotherCardBtn'
+
+- runFlow:
+    when: # handle iOS id
+      platform: iOS
+    commands:
+      - tapOn:
+          id: 'cardrequest-item-1'
+          index: 0
+
+- runFlow:
+    when: # handle iOS id
+      platform: Android
+    commands:
+      - tapOn:
+          id: 'CardRequestName-1'
+
+#assert Fees for AE
+- assertVisible: '${ FEES } AED'
+#assert "visit our fees page"
+- tapOn: 'visit our fees page.'
+- assertVisible:
+    id: 'coreText-Fees'
+- tapOn:
+    id: 'BackButton'
+
+- assertVisible:
+    id: 'NextBtn'
+    enabled: true
+- tapOn:
+    id: 'NextBtn'
+- assertVisible:
+    id: 'coreText-Delivery Address'
+- tapOn:
+    id: 'addressLine1-inputCell-value'
+- inputText: ${ ADDRESS }
+- tapOn:
+    id: 'addressLine2-inputCell-value'
+- inputText: ${ ADDRESS }
+- tapOn:
+    id: 'addressArea-inputCell-value'
+- inputText: ${ CITY }
+
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+
+- runFlow:
+    when: # handle iOS keyboard
+      platform: iOS
+    commands:
+      - tapOn:
+          id: 'Return'
+
+- tapOn:
+    id: 'City'
+
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: Dubai
+          index: 0
+
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          id: Dubai
+
+- tapOn:
+    id: 'NextBtn'
+    retryTapIfNoChange: false
+
+#Assert Topup button works
+- assertVisible:
+    id: 'coreText-actionText'
+
+- tapOn:
+    id: 'coreText-actionText'
+
+- waitForAnimationToEnd:
+    timeout: 10000
+
+- assertVisible:
+    id: 'coreText-Top-up'
+- tapOn:
+    id: 'BackButton'
+
+- assertVisible:
+    id: 'ConfirmBtn'
+    enabled: true
+- tapOn:
+    id: 'ConfirmBtn'
+
+- tapOn:
+    id: 'modal-button-Confirm⚠'
+    optional: true
+
+- tapOn:
+    id: 'modal-button-Confirm'
+    optional: true
+
+- tapOn:
+    text: 'Confirm'
+    optional: true
+
+- tapOn:
+    text: 'Confirm ⚠'
+    optional: true
+
+#Assert transaction details page
+- assertVisible:
+    id: 'coreText-Text'
+    index: 0
+
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible: 'Pyypl card'
+      - assertVisible: 'Prepaid'
+
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible: 'Pyypl card Prepaid'
+
+- scrollUntilVisible:
+    element:
+      id: 'coreText-TransactionDetailNameCountry'
+    direction: 'DOWN'
+    timeout: 50000
+    speed: 40
+    visibilityPercentage: 100
+    centerElement: false
+
+- assertVisible:
+    id: 'coreText-headerBar-title'
+- assertVisible:
+    id: 'coreText-TransactionDetailNameStatus'
+- assertVisible:
+    id: 'coreText-TransactionDetailValueStatus'
+- assertVisible:
+    id: 'coreText-TransactionDetailNameID'
+- assertVisible:
+    id: 'coreText-TransactionDetailValueID'
+- assertVisible:
+    id: 'coreText-TransactionDetailNameCountry'
+- assertVisible:
+    id: 'coreText-TransactionDetailValueCountry'
+- assertVisible:
+    id: 'coreText-TransactionDetailNameService'
+- assertVisible:
+    id: 'coreText-TransactionDetailValueCountry'
+
+- scrollUntilVisible:
+    element:
+      text: 'Physical card (incl. VAT)'
+    direction: 'DOWN'
+    timeout: 50000
+    speed: 40
+    visibilityPercentage: 100
+    centerElement: false
+
+- assertVisible: 'Service'
+- assertVisible: 'Order Physical Card'
+- assertVisible: 'Physical card (incl. VAT)'
+- assertVisible: 'AED.*'
+
+- assertVisible:
+    id: 'CloseBtn'
+- tapOn:
+    id: 'CloseBtn'
+
+#Assert Good to know screen
+- assertVisible:
+    id: 'coreText-CardDeliveryInfoScreenTitle'
+- assertVisible:
+    "Please contact customer support if you experience any issues with\
+    \ your card delivery."
+- tapOn:
+    id: 'CloseBtn'
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Home'

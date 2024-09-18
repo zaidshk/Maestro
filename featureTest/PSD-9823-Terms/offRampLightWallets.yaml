@@ -1,0 +1,42 @@
+# MIGHT NOT WORK ON IOS SIMULATOR DUE TO WALLET CONNECT LAGS ON IT
+
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - IN
+  - DISABLED
+---
+- tapOn:
+    id: 'wallet-feature-Top up'
+- tapOn:
+    id: 'topUpOverview-categoryButton-Crypto-mode'
+- tapOn:
+    id: 'cell-item-CRYPTO_PROVIDERS'
+    index: 1
+- tapOn:
+    id: 'terms-and-conditions-read-action'
+# Commented because it's not working on Android
+# - assertVisible:
+#     text: 'Pyypl Kenya Limited Terms & Conditions (“Terms”)'
+- tapOn:
+    id: 'handle-bottomSheet'
+- tapOn:
+    id: 'checkbox'
+- tapOn:
+    id: 'accept-terms-button'
+# As Binance Pay is often down, I consider service is not available
+- tapOn:
+    id: 'BackButton'
+- assertVisible:
+    id: 'wallet-feature-Top up'
+- tapOn:
+    id: 'wallet-feature-Top up'
+- tapOn:
+    id: 'topUpOverview-categoryButton-Crypto-mode'
+- tapOn:
+    id: 'cell-item-CRYPTO_PROVIDERS'
+    index: 1
+- tapOn:
+    id: 'BackButton'
+- assertVisible:
+    id: 'wallet-feature-Top up'

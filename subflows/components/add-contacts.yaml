@@ -1,0 +1,43 @@
+appId: com.apple.MobileAddressBook
+---
+- launchApp:
+    appId: com.apple.MobileAddressBook
+    clearState: true
+    clearKeychain: true
+    stopApp: true
+    permissions: { all: unset }
+- runFlow:
+    when:
+      platform: iOS
+      notVisible: .*John Doe.*
+    commands:
+      - runFlow:
+          when:
+            visible:
+              text: 'All iPhone'
+              index: 1
+          commands:
+            - tapOn: 'All iPhone'
+      - tapOn: 'Add'
+      - tapOn:
+          id: 'First name'
+      - inputText: 'John'
+      - tapOn:
+          id: 'Last name'
+      - inputText: 'Doe'
+      - runFlow:
+          when:
+            platform: iOS
+            visible:
+              text: 'Return'
+          commands:
+            - tapOn:
+                text: 'Return'
+      - scrollUntilVisible:
+          element:
+            text: 'add phone'
+          direction: 'DOWN'
+      - tapOn: 'add phone'
+      - inputText: '+971561570201'
+      - tapOn: 'Done'
+      - stopApp: com.apple.MobileAddressBook

@@ -1,0 +1,76 @@
+appId: ''
+---
+- runFlow:
+    env:
+      FLOW: Send Money
+    file: ../components/navigate-to.yaml
+
+# Click OnRamp
+- tapOn:
+    id: 'BLOCK_CHAIN_TRANSFER-mode'
+
+# Click on I agree button on Terms
+- tapOn:
+    id: 'coreText-ButtonLabel'
+
+# Wait until the Help link is visible
+- extendedWaitUntil:
+    visible:
+      id: 'coreText-binanceDetails-headerBar-actionText'
+
+# Click on The QR scan icon
+- tapOn:
+    id: 'imageSVG-icon'
+    index: 3 # index changes randomly
+
+# Navigate back
+- tapOn:
+    id: 'BackButton'
+
+# Input the BEP20 Address
+- extendedWaitUntil:
+    visible:
+      id: 'depositAddress-inputDepositAddressCell-textInput'
+- tapOn:
+    id: 'depositAddress-inputDepositAddressCell-textInput'
+- inputText: ${BEP20_ADDRESS}
+
+# Input the Amount
+- tapOn:
+    id: 'amountFrom-amountCell-currency'
+- inputText: ${AMOUNT}
+
+# Click on Next button
+- tapOn:
+    id: 'coreText-nextLabel'
+
+# Wait until nick name field is visible
+- extendedWaitUntil:
+    visible:
+      id: 'beneficiaryNickName-inputCell-value'
+- tapOn:
+    id: 'beneficiaryNickName-inputCell-value'
+- inputText: ${NICK_NAME}
+
+# Click on Next button
+- tapOn:
+    id: 'coreText-NextBtn-beneficiaryScreen-buttonLabel'
+
+- tapOn:
+    text: 'Done'
+    optional: true
+
+# Click on Send button
+- tapOn:
+    id: 'coreText-nextLabel'
+
+- waitForAnimationToEnd:
+    timeout: 5000
+
+# Click on saved beneficiary alert
+- tapOn:
+    id: 'modal-button-OK'
+
+# click on back home button
+- tapOn:
+    id: 'coreText-backHomeLabel'

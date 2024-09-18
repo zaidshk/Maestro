@@ -1,0 +1,91 @@
+appId: ''
+---
+# fill in login details
+- tapOn:
+    id: 'coreText-LoginBtnLabel'
+- assertVisible:
+    id: 'coreText-Text'
+
+# pick the configured country in constants.js if not chosen already
+- runFlow:
+    file: ../components/pick-country.yaml
+    env:
+      COUNTRY_CODE: ${COUNTRY_CODE}
+      CODE: ${CODE}
+      COUNTRY_NAME: ${COUNTRY_NAME}
+
+# fill in phone number
+- tapOn:
+    id: 'PhoneInput'
+- inputText: ${PHONE_NUMBER}
+
+# Android: dismiss keyboard
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+
+# Handle Captcha
+- runFlow:
+    when:
+      visible: 'Click to verify'
+    commands:
+      - tapOn: 'Click to verify'
+
+# proceed with sign in
+- tapOn:
+    id: 'NextBtn'
+- extendedWaitUntil:
+    notVisible:
+      id: 'EnterPhoneScreen'
+    timeout: 70000
+- assertNotVisible:
+    id: 'EnterPhoneScreen'
+
+# fill in otp and/or passcode
+- runFlow:
+    when: # fill in otp if required
+      visible:
+        id: 'EnterOTPScreen'
+    commands:
+      - runScript:
+          file: ./otp.js
+          env:
+            CODE: ${CODE}
+            PHONE_NUMBER: ${PHONE_NUMBER}
+      - tapOn: '•'
+      - inputText: ${output.otp}
+- runFlow:
+    when: # fill in passcode
+      visible:
+        id: 'EnterPasscodeScreen'
+    commands:
+      - tapOn:
+          id: ${PASSCODE[0]}
+      - tapOn:
+          id: ${PASSCODE[1]}
+      - tapOn:
+          id: ${PASSCODE[2]}
+      - tapOn:
+          id: ${PASSCODE[3]}
+
+# land on home screen
+- extendedWaitUntil:
+    notVisible:
+      id: 'EnterPasscodeScreen'
+    timeout: 70000
+- assertNotVisible:
+    id: 'EnterPasscodeScreen'
+- waitForAnimationToEnd:
+    timeout: 30000 #need extra time cloud execution
+
+# handle permissions
+- runFlow:
+    when:
+      platform: iOS
+      visible:
+        text: 'Cancel'
+    commands:
+      - tapOn:
+          text: 'Cancel'

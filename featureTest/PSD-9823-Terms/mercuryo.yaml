@@ -1,0 +1,38 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - IN
+  - DISABLED
+---
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Hub'
+- tapOn:
+    id: 'mode_scr.9000_hub.mercuryo_name-mode'
+- tapOn:
+    id: 'terms-and-conditions-read-action'
+# Commented because it's not working on Android
+# - assertVisible:
+#     text: 'PYYPL CUSTOMER TERMS OF USE'
+- tapOn:
+    id: 'handle-bottomSheet'
+- tapOn:
+    id: 'checkbox'
+- tapOn:
+    id: 'accept-terms-button'
+- assertVisible:
+    text: 'Enter your TRC-20 address'
+- tapOn:
+    id: 'BackButton'
+# Check that it skips the terms correctly
+- assertVisible:
+    id: 'mode_scr.9000_hub.mercuryo_name-mode'
+- tapOn:
+    id: 'mode_scr.9000_hub.mercuryo_name-mode'
+- assertVisible:
+    text: 'Enter your TRC-20 address'
+- tapOn:
+    id: 'BackButton'
+- assertVisible:
+    id: 'mode_scr.9000_hub.mercuryo_name-mode'
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Home'

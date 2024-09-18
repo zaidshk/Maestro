@@ -1,0 +1,34 @@
+appId: ''
+---
+# iOS: pick the configured country in user.js if not chosen already
+- runFlow:
+    when:
+      platform: iOS
+      notVisible:
+        text: 'Country code ${COUNTRY_CODE} +${CODE}'
+    commands:
+      - tapOn:
+          id: 'CountryCode'
+      - tapOn:
+          id: 'SearchInput'
+      - inputText: ${COUNTRY_NAME}
+      - tapOn:
+          id: ${COUNTRY_NAME}
+      - tapOn:
+          id: ${COUNTRY_NAME}
+
+  # Android: pick the configured country in user.js if not chosen already
+- runFlow:
+    when:
+      platform: Android
+      notVisible:
+        text: 'Country code, ${COUNTRY_CODE} +${CODE}'
+    commands:
+      - tapOn:
+          id: 'CountryCode'
+      - tapOn:
+          id: 'SearchInput'
+      - inputText: ${COUNTRY_NAME}
+      - tapOn:
+          id: 'coreText-Text'
+          text: ${COUNTRY_NAME}

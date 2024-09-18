@@ -1,0 +1,21 @@
+appId: ""
+---
+- tapOn:
+    id: "ProfileBtn"
+- scrollUntilVisible:
+    element:
+      id: "menu-item-logOut"
+    direction: "DOWN"
+    timeout: 50000
+    speed: 40
+    visibilityPercentage: 100
+    centerElement: false
+- tapOn:
+    id: "menu-item-logOut"
+- tapOn:
+    id: "modal-button-Yes"
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: "coreText-LoginBtnLabel"
+- stopApp: ${output.meta.app_bundle_id}

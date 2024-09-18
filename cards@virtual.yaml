@@ -1,0 +1,55 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+onFlowStart:
+  - runScript: ./constants.js
+  - evalScript: ${console.log(JSON.stringify(output.user))}
+  - evalScript: ${ output.physical_cards=output.cards.cases.physical_card_request.data }
+  - evalScript: ${ output.virtual_card=output.cards.cases.virtual_card.data }
+  - evalScript: ${ output.card_details=output.cards.cases.card_details.data }
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- runFlow:
+    file: ./subflows/cards/virtual-create.yaml
+    env:
+      FEES: ${output.virtual_card.fees}
+
+- runFlow:
+    file: ./subflows/cards/physical-request.yaml
+    env:
+      ADDRESS: ${output.physical_cards.address}
+      FEES: ${output.physical_cards.fees}
+      CITY: ${output.physical_cards.city}
+- runFlow:
+    file: ./subflows/cards/card-details.yaml
+    env:
+      NAME1: ${ output.card_details.name1}
+      NAME2: ${ output.card_details.name2}
+      CARDNUMBER: ${ output.card_details.cardnumber}
+      LAST_4_DIGITS: ${ output.card_details.last_4_digits}
+      EXPIRY: ${ output.card_details.expiry}
+      CVV: ${ output.card_details.cvv}
+- runFlow: ./subflows/cards/physical-activate.yaml

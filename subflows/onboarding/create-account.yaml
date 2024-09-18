@@ -1,0 +1,105 @@
+appId: ''
+---
+- tapOn:
+    id: 'CreateAccountBtn'
+- tapOn:
+    id: 'OnboardingTermsScreen-continue-button'
+- runFlow:
+    when:
+      visible:
+        text: 'Continue'
+    commands:
+      - tapOn: 'Continue'
+- inputText: '${ NICKNAME }'
+- tapOn:
+    id: 'OnboardingNicknameScreen-continue-button'
+- runFlow:
+    file: ../components/pick-country.yaml
+    env:
+      COUNTRY_CODE: ${COUNTRY_CODE}
+      CODE: ${CODE}
+      COUNTRY_NAME: ${COUNTRY_NAME}
+- tapOn:
+    id: 'PhoneInput'
+- inputText: '${ PHONE_NUMBER }'
+
+# Android: dismiss keyboard
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: 'Done'
+- tapOn:
+    id: 'NextBtn'
+- extendedWaitUntil:
+    visible:
+      id: 'EnterOTPScreen'
+    timeout: 45000
+- assertVisible:
+    id: 'EnterOTPScreen'
+- runScript:
+    file: ../auth/otp.js
+    env:
+      CODE: ${CODE}
+      PHONE_NUMBER: ${PHONE_NUMBER}
+- tapOn: '•'
+- inputText: ${output.otp}
+- assertVisible:
+    id: 'coreText-Enter Passcode'
+- tapOn:
+    id: ${PASSCODE[0]}
+- tapOn:
+    id: ${PASSCODE[1]}
+- tapOn:
+    id: ${PASSCODE[2]}
+- tapOn:
+    id: ${PASSCODE[3]}
+- tapOn:
+    id: ${PASSCODE[0]}
+- tapOn:
+    id: ${PASSCODE[1]}
+- tapOn:
+    id: ${PASSCODE[2]}
+- tapOn:
+    id: ${PASSCODE[3]}
+
+# - tapOn:
+#     id: 'inputCell-value'
+# - inputText: '$ { Email }'
+# - runFlow:
+#     when: #Handle Android keyboard
+#       platform: Android
+#     commands:
+#       - runFlow: ../../subflows/components/keyboard.yaml
+# - tapOn:
+#     id: 'coreText-OnboardingEmailScreen-confirm-buttonLabel'
+
+# Fails after this as it need the email otp
+- extendedWaitUntil:
+    visible:
+      id: 'coreText-Terms and Conditions'
+    timeout: 70000
+- assertVisible:
+    id: 'coreText-Terms and Conditions'
+- tapOn:
+    id: 'OnboardingTermsScreen-checkbox'
+- tapOn:
+    id: 'OnboardingTermsScreen-next-button'
+- extendedWaitUntil:
+    visible:
+      id: 'coreText-OnboardingCompletionScreen-title'
+    timeout: 70000
+- assertVisible:
+    id: 'coreText-OnboardingCompletionScreen-title'
+- tapOn:
+    id: 'OnboardingTermsScreen-enter-pyypl-button'
+- assertNotVisible:
+    id: 'OnboardingTermsScreen-enter-pyypl-button'
+- waitForAnimationToEnd:
+    timeout: 10000

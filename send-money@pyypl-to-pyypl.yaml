@@ -1,0 +1,67 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - RU
+  - UG
+  - SL
+  - KE
+
+  # Failing, transfer route not availble for UAe existing contact
+onFlowStart:
+  - runScript: constants.js
+
+  - evalScript: ${ output.tests=output.pyypl_to_pyypl.tests[output.user.country.countryCode] }
+
+  - evalScript: ${ output.amounts=output.pyypl_to_pyypl.amounts }
+
+  - evalScript: ${ console.log(JSON.stringify(output.pyypl_to_pyypl.cases)) }
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- repeat:
+    while:
+      true: ${ output.tests.length > 0 }
+    commands:
+      - evalScript: ${ output.test=output.tests[0] }
+      - runFlow:
+          file: ./subflows/send-money/pyypl-to-pyypl.yaml
+          env:
+            TEST_LEVEL: ${output.test.level}
+            USER_COUNTRY_CODE: ${ output.user.country.countryCode }
+            USER_CURRENCY: ${ output.user.country.currency }
+            USER_CODE: ${ output.user.country.value }
+            USER_COUNTRY_NAME: ${ output.user.country.countryName }
+            USER_PHONE_NUMBER: ${ output.user.phone_number }
+            BENEFICIARY_COUNTRY_CODE: ${ output.test.beneficiary.country.countryCode }
+            BENEFICIARY_CURRENCY: ${ output.test.beneficiary.currency }
+            BENEFICIARY_CODE: ${ output.test.beneficiary.country.value }
+            BENEFICIARY_COUNTRY_NAME: ${ output.test.beneficiary.country.countryName }
+            BENEFICIARY_PHONE_NUMBER: ${ output.test.beneficiary.phone_number }
+            AMOUNT_VALID: ${ output.pyypl_to_pyypl.cases.valid_amount.data.amount[output.user.currency] }
+            AMOUNT_MINIMUM: ${ output.pyypl_to_pyypl.cases.minimum_amount.data.amount[output.user.currency] }
+            AMOUNT_MAXIMUM: ${ output.pyypl_to_pyypl.cases.maximum_amount.data.amount[output.user.currency] }
+            FEES_APPLICABLE: ${ output.pyypl_to_pyypl.cases.fees_applicable.data.amount[output.user.currency] }
+            FEES_NOT_APPLICABLE: ${ output.pyypl_to_pyypl.cases.fees_not_applicable.data.amount[output.user.currency] }
+      - evalScript: ${ output.tests.shift() }

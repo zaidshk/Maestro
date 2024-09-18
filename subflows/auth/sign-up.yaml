@@ -1,0 +1,84 @@
+appId: ""
+---
+- tapOn:
+    id: "CreateAccountBtn"
+- tapOn:
+    id: "OnboardingTermsScreen-continue-button"
+- runFlow:
+    when:
+      visible:
+        text: "Continue"
+    commands:
+      - tapOn: "Continue"
+- inputText: "johndoe"
+- tapOn:
+    id: "OnboardingNicknameScreen-continue-button"
+- runFlow:
+    file: ../components/pick-country.yaml
+    env:
+      COUNTRY_CODE: ${COUNTRY_CODE}
+      CODE: ${CODE}
+      COUNTRY_NAME: ${COUNTRY_NAME}
+- tapOn:
+    id: "PhoneInput"
+- inputText: ${PHONE_NUMBER}
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: "com.google.android.inputmethod.latin:id/icon"
+          index: 2
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          text: "Done"
+- tapOn:
+    id: "NextBtn"
+- extendedWaitUntil:
+    visible: 
+      id: "EnterOTPScreen"
+    timeout: 45000
+- assertVisible:
+    id: "EnterOTPScreen"
+- runScript: 
+    file: ./otp.js
+    env:
+      CODE: ${CODE}
+      PHONE_NUMBER: ${PHONE_NUMBER}
+- tapOn: "•"
+- inputText: ${output.otp}
+- assertVisible:
+    id: "coreText-Enter Passcode"
+- tapOn:
+    id: ${PASSCODE[0]}
+- tapOn:
+    id: ${PASSCODE[1]}
+- tapOn:
+    id: ${PASSCODE[2]}
+- tapOn:
+    id: ${PASSCODE[3]}
+- tapOn:
+    id: ${PASSCODE[0]}
+- tapOn:
+    id: ${PASSCODE[1]}
+- tapOn:
+    id: ${PASSCODE[2]}
+- tapOn:
+    id: ${PASSCODE[3]}
+- assertVisible:
+    id: "coreText-Terms and Conditions"
+- tapOn:
+    id: "OnboardingTermsScreen-checkbox"
+- tapOn:
+    id: "OnboardingTermsScreen-next-button"
+- assertVisible:
+    id: "coreText-OnboardingCompletionScreen-title"
+- tapOn:
+    id: "OnboardingTermsScreen-enter-pyypl-button"
+- assertNotVisible:
+    id: "OnboardingTermsScreen-enter-pyypl-button"
+- waitForAnimationToEnd:
+    timeout: 10000

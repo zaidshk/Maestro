@@ -1,0 +1,55 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - RU
+
+  # Failing, top up failed at the end
+
+onFlowStart:
+  - runScript: constants.js
+
+  - evalScript: ${output.tests=output.contact_pay.tests[output.user.country.countryCode]}
+
+  - evalScript: ${output.amounts=output.contact_pay.cases.amounts}
+
+  - evalScript: ${output.cards=output.contact_pay.cases.cards}
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- repeat:
+    while:
+      true: ${output.tests.length > 0}
+    commands:
+      - evalScript: ${output.test=output.tests[0]}
+      - runFlow:
+          file: ./subflows/top-up/contact-pay.yaml
+          env:
+            TEST_LEVEL: ${output.test.level}
+            CARD_NUMBER: ${output.cards.valid.card_number}
+            EXPIRY_DATE: ${output.cards.valid.expiry_month + output.cards.valid.expiry_year}
+            EXPIRY_MONTH: ${output.cards.valid.expiry_month}
+            EXPIRY_YEAR: ${output.cards.valid.expiry_year}
+            CVV: ${output.cards.valid.cvv}
+            AMOUNT: ${output.amounts.valid[output.user.currency]}
+      - evalScript: ${output.tests.shift()}

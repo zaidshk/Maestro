@@ -1,0 +1,35 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - IN
+onFlowStart:
+  - runScript: constants.js
+  - evalScript: ${ output.tests=output.mercuryo.tests[output.user.country.countryCode] }
+  - evalScript: ${console.log(JSON.stringify(output.mercuryo))}
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- runFlow:
+    file: ./subflows/hub/mercuryo.yaml
+    env:
+      TRC20: ${output.tests.TRC20}

@@ -1,0 +1,87 @@
+appId: ''
+---
+- tapOn:
+    id: 'wallet-feature-Top up'
+- tapOn:
+    id: 'topUpOverview-categoryButton-DirectBanktransfer-mode'
+- runFlow:
+    when:
+      visible:
+        id: 'LEANMB1_SAU'
+    commands:
+      - tapOn:
+          id: 'LEANMB1_SAU'
+      - tapOn: 'Continue'
+      - tapOn: 'Username'
+      - inputText: 'mayolajones'
+      - tapOn: 'Password'
+      - inputText: 'FOTfFevIk'
+      - tapOn:
+          id: 'com.android.systemui:id/back'
+      - tapOn: 'Log in securely'
+      - tapOn:
+          text: 'One Time Password'
+          index: 1
+      - inputText: 1111
+      - tapOn:
+          id: 'com.android.systemui:id/back'
+      - tapOn: 'Continue'
+      - tapOn: 'Done'
+      - 'waitForAnimationToEnd'
+      - tapOn:
+          id: 'coreText-LoadPaymentMethodItem-current-changeButton'
+      - tapOn:
+          id: 'LoadPaymentMethodItem-0-actionIcon'
+      - assertVisible:
+          id: 'itemCell-value'
+          index: 0
+      - assertVisible:
+          id: 'itemCell-value'
+          index: 1
+      - assertVisible:
+          id: 'itemCell-value'
+          index: 2
+      - assertVisible:
+          id: 'itemCell-value'
+          index: 3
+      - assertVisible:
+          id: 'itemCell-value'
+          index: 4
+      - tapOn:
+          id: 'coreText-LoadPaymentMethodItem-current-issuer'
+      - tapOn:
+          id: 'BackButton'
+      - tapOn:
+          id: 'coreText-LoadPaymentMethodItem-current-issuer'
+      - assertVisible:
+          id: 'LEANMB2_SAU'
+      - swipe:
+          from:
+            text: 'Available banks'
+          direction: 'DOWN'
+      - tapOn:
+          id: 'BackButton'
+      - tapOn:
+          id: 'BackButton'
+- extendedWaitUntil:
+    visible:
+      id: 'amountFrom-amountCell-textInput'
+    timeout: 40000
+- tapOn:
+    id: 'amountFrom-amountCell-textInput'
+- inputText: 50
+- runFlow:
+    when: #Handle Android keyboard
+      platform: Android
+    commands:
+      - runFlow: ../../subflows/components/keyboard.yaml
+- tapOn:
+    id: 'coreText-TopUpAmountsScreen-topUpButtonLabel'
+- assertVisible: 'Payment Details'
+- tapOn: 'Confirm payment'
+- assertVisible: 'Payment successful'
+- tapOn: 'Done'
+- assertVisible:
+    id: 'coreText-viewHeader-title'
+- tapOn:
+    id: 'coreText-ButtonLabel'

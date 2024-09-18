@@ -1,0 +1,3 @@
+appId: ""
+---
+- evalScript: ${console.log("build the auth kyc id document flow here please")}

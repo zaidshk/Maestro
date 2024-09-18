@@ -1,0 +1,150 @@
+appId: ''
+---
+- runFlow:
+    env:
+      FLOW: Top Up
+    file: ../components/navigate-to.yaml
+
+- extendedWaitUntil:
+    visible:
+      id: 'topUpOverview-categoryButton-Mobilewallets-mode'
+
+- tapOn:
+    id: 'topUpOverview-categoryButton-Mobilewallets-mode'
+
+# Assertion checks
+- runFlow:
+    when:
+      true: ${ output.test.level >= output.mobile_wallets.cases.component_assertion.level }
+      true: ${ output.mobile_wallets.cases.component_assertion.activated }
+    commands:
+        # Screen Title check
+      - assertVisible:
+          id: 'coreText-Flutterwave'
+      - assertVisible:
+          text: 'You load'
+        # Balance check
+      - assertVisible:
+          id: 'coreText-AmountLeftDescription-youLoad'
+      - assertVisible:
+          text: 'You pay'
+        # Currency Conversion check
+      - assertVisible:
+          id: 'coreText-AmountLeftDescription-youPay'
+        # Fee label check
+      - assertVisible:
+          id: 'coreText-AmountRightDescriptionTop-youPay'
+        # BeforeFee label check
+      - assertVisible:
+          id: 'coreText-AmountRightDescriptionBottom-youPay'
+        # Back button check
+      - assertVisible:
+          id: 'TopUpBtn'
+        # enabled: false
+      - assertVisible:
+          id: 'BackButton'
+        # Close button check
+      - assertVisible:
+          id: 'CloseNavButton'
+
+# Min and Max amount validations
+- runFlow:
+    when:
+      true: ${ output.test.level >= output.mobile_wallets.cases.maximum_amount.level }
+      true: ${ output.mobile_wallets.cases.maximum_amount.activated}
+    commands:
+      - tapOn:
+          id: 'FlutterwaveLoadInput'
+      - inputText: ${output.mobile_wallets.cases.maximum_amount.data.amount[output.user.currency]}
+        # Min amount label check
+      - assertVisible:
+          id: 'coreText-AmountRightDescriptionTop-youLoad'
+        # Max amount label check
+      - assertVisible:
+          id: 'coreText-AmountRightDescriptionTop-youLoad'
+      - assertVisible:
+          id: 'TopUpBtn'
+          enabled: false
+      - eraseText
+
+- tapOn:
+    id: 'FlutterwaveLoadInput'
+
+- inputText: ${AMOUNT}
+
+- tapOn:
+    id: 'TopUpBtn'
+
+- waitForAnimationToEnd
+
+# # Pyypl logo check
+# - extendedWaitUntil:
+#     visible:
+#       text: 'merchant-logo'
+#     timeout: 100000
+
+#merchant logo not visible above
+
+- runFlow:
+    when:
+      visible:
+        text: 'FRENCH'
+    commands:
+      # Select Country in French
+      - tapOn:
+          text: 'FRENCH'
+      - tapOn:
+          text: 'ENGLISH'
+      # Assert for Error Alert
+      - assertNotVisible:
+          text: 'alert'
+      - tapOn:
+          text: 'Click here to choose'
+          optional: true
+      - tapOn:
+          text: ${COUNTRY}
+          optional: true
+
+- runFlow:
+    when:
+      visible:
+        # Select Wallet in English
+        text: 'Click here to choose'
+    commands:
+      - tapOn:
+          text: 'Click here to choose'
+      - tapOn:
+          text: ${WALLET}
+
+- tapOn:
+    text: '.*Pay .*'
+
+- tapOn:
+    text: 'Proceed'
+    optional: true
+
+- runFlow:
+    when:
+      visible:
+        text: 'Enter OTP'
+    commands:
+      - tapOn:
+          below: 'Enter OTP'
+      - inputText: '123456'
+      - tapOn:
+          text: 'Validate OTP'
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- tapOn:
+    id: 'CloseBtn'
+
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- assertNotVisible:
+    id: 'LottieAnimation'
+
+- tapOn:
+    id: 'CloseBtn'
+    optional: true

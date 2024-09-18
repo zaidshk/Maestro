@@ -1,0 +1,22 @@
+appId: ""
+---
+- openLink:
+      link: ${ DEEPLINK }
+      autoVerify: false
+
+- waitForAnimationToEnd
+
+- extendedWaitUntil:
+      visible: ${ TEXT }
+      timeout: 12000
+
+- openLink:
+      link: "pyypl.mock://App/Home/Accounts"
+      autoVerify: true
+
+- waitForAnimationToEnd
+
+- extendedWaitUntil:
+      visible:
+          id: "wallet-feature-Send"
+      timeout: 12000

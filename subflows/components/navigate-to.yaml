@@ -1,0 +1,15 @@
+appId: ""
+---
+- runFlow:
+    commands:
+      - tapOn:
+          id: wallet-feature-Top up
+    when:
+      true: ${FLOW == 'Top Up'}
+
+- runFlow:
+    commands:
+      - tapOn:
+          id: wallet-feature-Send
+    when:
+      true: ${FLOW == 'Send Money'}

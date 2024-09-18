@@ -1,0 +1,243 @@
+appId: ""
+---
+- waitForAnimationToEnd:
+    timeout: 10000
+- extendedWaitUntil:
+    visible: 
+      id: "wallet-feature-Send"
+    timeout: 10000
+- tapOn:
+    id: "wallet-feature-Send"
+    optional: true
+
+- assertVisible:
+    id: "INTERNATIONAL_TRANSFER-mode"
+    optional: true
+
+- tapOn:
+    id: "INTERNATIONAL_TRANSFER-mode"
+    optional: true
+
+
+
+# START RUN FLOW BASED ON TEST CASE
+- runFlow: 
+    when:
+      true: ${TEST_CASE == "bank"}
+    file: ../send-money/remittance-bank.yaml
+    env:
+      USER_COUNTRY_NAME: ${USER_COUNTRY_NAME}
+      BENEFICIARY_COUNTRY_CODE: ${BENEFICIARY_COUNTRY_CODE}
+      BENEFICIARY_CODE: ${BENEFICIARY_CODE}
+      BENEFICIARY_COUNTRY_NAME: ${BENEFICIARY_COUNTRY_NAME}
+      BENEFICIARY_PHONE_NUMBER: ${BENEFICIARY_PHONE_NUMBER}
+      BENEFICIARY_CURRENCY: ${BENEFICIARY_CURRENCY}
+      AMOUNT: ${AMOUNT}
+      IBAN: ${IBAN}
+      DOCUMENT_NUMBER: ${DOCUMENT_NUMBER}
+
+- runFlow: 
+    when:
+      true: ${TEST_CASE == "upi"}
+    file: ./remittance-upi.yaml
+    env:
+      USER_COUNTRY_NAME: ${USER_COUNTRY_NAME}
+      BENEFICIARY_COUNTRY_CODE: ${BENEFICIARY_COUNTRY_CODE}
+      BENEFICIARY_CODE: ${BENEFICIARY_CODE}
+      BENEFICIARY_COUNTRY_NAME: ${BENEFICIARY_COUNTRY_NAME}
+      BENEFICIARY_PHONE_NUMBER: ${BENEFICIARY_PHONE_NUMBER}
+      AMOUNT: ${AMOUNT}
+      IBAN: ${IBAN}
+      DOCUMENT_NUMBER: ${DOCUMENT_NUMBER}
+      BENEFICIARY_CURRENCY: ${BENEFICIARY_CURRENCY}
+
+- runFlow: 
+    when:
+      true: ${TEST_CASE == "cash"}
+    file: ./remittance-cash.yaml
+    env:
+      USER_COUNTRY_NAME: ${USER_COUNTRY_NAME}
+      BENEFICIARY_COUNTRY_CODE: ${BENEFICIARY_COUNTRY_CODE}
+      BENEFICIARY_CODE: ${BENEFICIARY_CODE}
+      BENEFICIARY_COUNTRY_NAME: ${BENEFICIARY_COUNTRY_NAME}
+      BENEFICIARY_PHONE_NUMBER: ${BENEFICIARY_PHONE_NUMBER}
+      AMOUNT: ${AMOUNT}
+      IBAN: ${IBAN}
+      DOCUMENT_NUMBER: ${DOCUMENT_NUMBER}
+      BENEFICIARY_CURRENCY: ${BENEFICIARY_CURRENCY}
+
+- runFlow: 
+    when:
+      true: ${TEST_CASE == "wallet"}
+    file: ./remittance-wallet.yaml
+    env:
+      USER_COUNTRY_NAME: ${USER_COUNTRY_NAME}
+      BENEFICIARY_COUNTRY_CODE: ${BENEFICIARY_COUNTRY_CODE}
+      BENEFICIARY_CODE: ${BENEFICIARY_CODE}
+      BENEFICIARY_COUNTRY_NAME: ${BENEFICIARY_COUNTRY_NAME}
+      BENEFICIARY_PHONE_NUMBER: ${BENEFICIARY_PHONE_NUMBER}
+      AMOUNT: ${AMOUNT}
+      IBAN: ${IBAN}
+      DOCUMENT_NUMBER: ${DOCUMENT_NUMBER}
+      BENEFICIARY_CURRENCY: ${BENEFICIARY_CURRENCY}
+# END RUN FLOW BASED ON TEST CASE
+
+- assertVisible:
+    id: "NextBtn-beneficiaryScreen-button"
+    enabled: true
+
+- tapOn:
+    id: "NextBtn-beneficiaryScreen-button"
+
+- assertVisible:
+    id: "next"
+    enabled: true
+
+- tapOn:
+    id: "next"
+
+- extendedWaitUntil:
+    notVisible: 
+      id: "LottieAnimation"
+    timeout: 60000
+
+- extendedWaitUntil:
+    visible: 
+      id: "modal-button-OK"
+    timeout: 60000
+
+- assertVisible:
+    id: "modal-button-OK"
+
+- tapOn:
+    id: "modal-button-OK"
+
+
+# Positive test to verify value changes in sender and beneficiary amount fields
+- runFlow:
+    when:
+      true: ${ output.test.level >= output.remittance.cases.transaction_screen_assertion.level }
+      true: ${ output.remittance.cases.transaction_screen_assertion.activated }
+    commands:
+      - assertVisible:
+          id: "coreText-viewHeader-title"
+      - assertVisible:
+          id: "coreText-viewHeader-body"
+      - assertVisible:
+          id: "contact"
+      - scrollUntilVisible:
+          element:
+            id: "countryTo-itemCell-value"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "status-itemCell"
+      - assertVisible:
+          id: "id-itemCell"
+      - assertVisible:
+          id: "countryTo-itemCell-label"
+      - assertVisible:
+          id: "countryTo-itemCell-value"
+      - assertVisible:
+          id: "amountFrom-itemCell-label"
+      - scrollUntilVisible:
+          element:
+            id: "rate-itemCell-value"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "amountFrom-itemCell-value"
+      - assertVisible:
+          id: "amountTo-itemCell-label"
+      - assertVisible:
+          id: "amountTo-itemCell-value"
+      - assertVisible:
+          id: "rate-itemCell-label"
+      - assertVisible:
+          id: "rate-itemCell-value"
+      - scrollUntilVisible:
+          element:
+            id: "paymentPurposeCode-itemCell-value"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "fee-itemCell-label"
+      - assertVisible:
+          id: "fee-itemCell-value"
+      - scrollUntilVisible:
+          element:
+            id: "beneficiaryRelationshipToSender-itemCell-label"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "total-itemCell-label"
+      - assertVisible:
+          id: "total-itemCell-value"
+      - assertVisible:
+          id: "paymentPurposeCode-itemCell-label"
+      - assertVisible:
+          id: "paymentPurposeCode-itemCell-value"
+      - assertVisible:
+          id: "beneficiaryRelationshipToSender-itemCell-label"
+      - assertVisible:
+          id: "beneficiaryRelationshipToSender-itemCell-value"
+      - assertVisible:
+          id: "beneficiaryIdentityDocumentType-itemCell-label"
+          optional: true
+      - assertVisible:
+          id: "beneficiaryIdentityDocumentType-itemCell-value"
+          optional: true
+      - assertVisible:
+          id: "beneficiaryIdentityDocumentNumber-itemCell-label"
+          optional: true
+      - assertVisible:
+          id: "beneficiaryIdentityDocumentNumber-itemCell-value"
+          optional: true
+      - scrollUntilVisible:
+          element:
+            id: "beneficiaryTargetInstitutionId-itemCell-value"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "beneficiaryTargetInstitutionId-itemCell-label"
+      - scrollUntilVisible:
+          element:
+            id: "senderSourceOfCash-itemCell-value"
+          direction: "DOWN"
+          timeout: 50000
+          speed: 40
+          visibilityPercentage: 100
+          centerElement: false
+      - assertVisible:
+          id: "beneficiaryIdentityDocumentNumber-itemCell-value"
+          optional: true
+      - assertVisible:
+          id: "beneficiaryTargetInstitutionId-itemCell-label"
+      - assertVisible:
+          id: "beneficiaryTargetInstitutionId-itemCell-value"
+      - assertVisible:
+          id: "senderSourceOfCash-itemCell-label"
+      - assertVisible:
+          id: "senderSourceOfCash-itemCell-value"
+
+      - assertVisible:
+          id: "backHome"
+
+      - tapOn:
+          id: "backHome"
+

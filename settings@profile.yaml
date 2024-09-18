@@ -1,0 +1,45 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+onFlowStart:
+  - runScript: constants.js
+
+  - evalScript: ${output.tests=output.profile.tests[output.user.country.countryCode]}
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- runFlow:
+    file: ./subflows/settings/verify-profile.yaml
+    env:
+      PASSCODE: ${output.user.passcode}
+      PHONE_NUMBER: ${output.user.phone_number}
+      FULL_PHONE_NUMBER: ${output.user}
+      NAME: ${output.profile.cases.name.data.name_valid}
+      EMAIL: ${output.profile.cases.email.data.email_valid}
+      ADDRESS_1: ${output.profile.cases.address_1.data.address_1_valid}
+      ADDRESS_2: ${output.profile.cases.address_2.data.address_2_valid}
+      ZIP_CODE: ${output.profile.cases.zip_code.data.zip_code_valid}
+      CITY: ${output.profile.cases.city.data.city_valid}
+      COUNTRY_NAME: ${output.user.country.countryName}

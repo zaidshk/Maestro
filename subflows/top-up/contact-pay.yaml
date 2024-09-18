@@ -1,0 +1,55 @@
+appId: ''
+---
+- tapOn:
+    id: 'wallet-feature-Top up'
+- extendedWaitUntil:
+    visible:
+      id: 'topUpOverview-categoryButton-Debitcard-mode'
+- assertVisible:
+    id: 'topUpOverview-categoryButton-Debitcard-mode'
+- tapOn:
+    id: 'topUpOverview-categoryButton-Debitcard-mode'
+
+- runFlow:
+    when:
+      visible:
+        text: 'Bottom Sheet handle'
+    commands:
+      - tapOn:
+          id: 'cell-item-CONTACTPAY_CARD'
+
+- assertVisible:
+    id: 'TopUpAmountsScreen-topUpButton'
+- inputText: ${AMOUNT}
+- tapOn:
+    text: 'Done'
+- tapOn:
+    id: 'TopUpAmountsScreen-topUpButton'
+- assertVisible:
+    text: 'НОМЕР КАРТЫ'
+- tapOn: 'НОМЕР КАРТЫ'
+- inputText: ${CARD_NUMBER}
+- tapOn:
+    text: 'Done'
+- tapOn: 'ММ'
+- inputText: ${EXPIRY_MONTH}
+- tapOn:
+    text: 'Done'
+- tapOn: 'ГГ'
+- inputText: ${EXPIRY_YEAR}
+- tapOn:
+    text: 'Done'
+- tapOn: '- - -'
+- inputText: ${CVV}
+- tapOn:
+    text: 'Done'
+- tapOn: 'ВЛАДЕЛЕЦ КАРТЫ'
+- inputText: 'John Doe'
+- tapOn:
+    text: 'Done'
+- tapOn:
+    text: 'ОПЛАТИТЬ'
+- assertVisible:
+    id: 'coreText-viewHeader-title'
+- tapOn:
+    point: '50%,92%' # TODO: give close button test ID

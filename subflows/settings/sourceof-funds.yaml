@@ -1,0 +1,70 @@
+appId: ''
+---
+- tapOn:
+    id: 'ProfileBtn'
+- tapOn:
+    id: 'menu-item-source_of_funds'
+- tapOn:
+    id: 'coreText-profession-optionCell-value'
+- tapOn:
+    id: ${ OCCUPATION1 }
+- tapOn:
+    id: 'coreText-sector-value'
+- tapOn:
+    id: ${ SECTOR1 }
+- tapOn:
+    id: 'coreText-subSector-label'
+- tapOn:
+    id: ${ SUB_SECTOR1 }
+- tapOn:
+    id: 'incomeRange'
+- tapOn:
+    id: ${ INCOME_RANGE1 }
+- tapOn:
+    id: 'turnoverRange'
+- tapOn:
+    id: ${ TURNOVER1 }
+- tapOn:
+    id: 'sourceOfFunds'
+- tapOn:
+    id: ${ SOURCE1 }
+- tapOn:
+    id: 'sourceOfFunds-update-button'
+- assertVisible: 'Source of funds'
+- tapOn:
+    id: 'modal-button-Okay'
+
+# change it back to full limit
+- tapOn:
+    id: 'ProfileBtn'
+- tapOn:
+    id: 'menu-item-source_of_funds'
+- tapOn:
+    id: 'coreText-profession-optionCell-value'
+- tapOn:
+    id: ${ OCCUPATION2 }
+- tapOn:
+    id: 'coreText-sector-value'
+- tapOn:
+    id: ${ SECTOR2 }
+- tapOn:
+    id: 'coreText-subSector-label'
+- tapOn:
+    id: ${ SUB_SECTOR2 }
+- tapOn:
+    id: 'incomeRange'
+- tapOn:
+    id: ${ INCOME_RANGE2 }
+- tapOn:
+    id: 'turnoverRange'
+- tapOn:
+    id: ${ TURNOVER2 }
+- tapOn:
+    id: 'sourceOfFunds'
+- tapOn:
+    id: ${ SOURCE2 }
+- tapOn:
+    id: 'sourceOfFunds-update-button'
+- assertVisible: 'Source of funds'
+- tapOn:
+    id: 'modal-button-Okay'

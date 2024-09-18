@@ -1,0 +1,58 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - AE
+  - SL
+  - KE
+onFlowStart:
+  - runScript: constants.js
+
+  - evalScript: ${output.tests=output.remittance.tests[output.user.country.countryCode]}
+
+  - evalScript: ${output.amounts=output.remittance.cases.data.amounts}
+  - evalScript: ${output.iban=output.remittance.cases.data.ibans}
+
+  - evalScript: ${output.document_numbers=output.remittance.cases.data.document_numbers}
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- repeat:
+    while:
+      true: ${output.tests.length > 0}
+    commands:
+      - evalScript: ${output.test=output.tests[0]}
+      - runFlow:
+          file: ./subflows/send-money/remittance.yaml
+          env:
+            TEST_LEVEL: ${output.test.level}
+            TEST_CASE: ${output.test.mode}
+            BENEFICIARY_COUNTRY_CODE: ${output.test.beneficiary.country.countryCode}
+            BENEFICIARY_CODE: ${output.test.beneficiary.country.value}
+            BENEFICIARY_COUNTRY_NAME: ${output.test.beneficiary.country.countryName}
+            BENEFICIARY_PHONE_NUMBER: ${output.test.beneficiary.phone_number}
+            AMOUNT: ${output.amounts.valid[output.user.currency]}
+            DOCUMENT_NUMBER: ${output.document_numbers.valid}
+            BENEFICIARY_CURRENCY: ${output.test.beneficiary.country.currency}
+            IBAN: ${output.iban.valid}
+      - evalScript: ${output.tests.shift()}

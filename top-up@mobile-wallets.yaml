@@ -1,0 +1,50 @@
+appId: com.pyypl.${MAESTRO_ENV}
+tags:
+  - GH
+  - CM
+
+# Fails to assert merchant logo in webview
+
+onFlowStart:
+  - runScript: constants.js
+  - evalScript: ${output.tests=output.mobile_wallets.tests[output.user.country.countryCode]}
+  - evalScript: ${output.amounts=output.mobile_wallets.amounts}
+  - evalScript: ${console.log(JSON.stringify(output.mobile_wallets.cases))}
+
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - tapOn:
+      id: 'BackButton'
+      optional: true
+  - runFlow:
+      when:
+        notVisible:
+          id: 'wallet-feature-Send'
+      commands:
+        - runFlow: ./subflows/app/launch-cold.yaml
+        - runFlow:
+            file: ./subflows/auth/sign-in.yaml
+            env:
+              COUNTRY_CODE: ${output.user.country.countryCode}
+              CODE: ${output.user.country.value}
+              COUNTRY_NAME: ${output.user.country.countryName}
+              PHONE_NUMBER: ${output.user.phone_number}
+              PASSCODE: ${output.user.passcode}
+---
+- repeat:
+    while:
+      'true': ${output.tests.length > 0}
+    commands:
+      - evalScript: ${output.test=output.tests[0]}
+      - runFlow:
+          file: ./subflows/top-up/mobile-wallets.yaml
+          env:
+            AMOUNT: ${output.mobile_wallets.cases.valid_amount.data.amount[output.user.currency]}
+            COUNTRY: ${output.test.country}
+            TEST_LEVEL: ${output.test.level}
+            WALLET: ${output.test.wallet}
+      - evalScript: ${output.tests.shift()}

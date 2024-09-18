@@ -1,0 +1,97 @@
+appId: ''
+---
+- tapOn:
+    id: 'tabBarButton-TouchableOpacity-Cards'
+
+- runFlow:
+    when:
+      visible:
+        id: 'GetNewCard'
+    commands:
+      - tapOn:
+          id: 'GetNewCard'
+
+# - runFlow:
+#     when: #Handle Android id
+#       platform: Android
+#     commands:
+#       - tapOn:
+#           text: '+ New card'
+#           retryTapIfNoChange: false
+
+# - runFlow:
+#     when: # handle iOS id
+#       platform: iOS
+#     commands:
+#       - tapOn:
+#           id: 'coreText-Text'
+#           index: 0
+
+- tapOn:
+    id: 'GetAnotherCardBtn'
+
+- runFlow:
+    when: #Handle Android id
+      platform: Android
+    commands:
+      - tapOn:
+          id: 'cardrequest-item-2'
+
+- runFlow:
+    when: # handle iOS id
+      platform: iOS
+    commands:
+      - tapOn:
+          id: 'cardrequest-item-2'
+
+- runFlow:
+    when:
+      visible:
+        text: 'You have reached the maximum virtual card ⚠'
+    commands:
+      - tapOn:
+          id: 'modal-button-Ok⚠'
+      - swipe:
+          from:
+            text: 'Add card' # From (x, y) center of element
+          direction: DOWN # To (50% of width, 10% of height)
+      - tapOn:
+          id: 'tabBarButton-TouchableOpacity-Home'
+
+- runFlow:
+    when:
+      visible:
+        text: 'You have reached the maximum virtual card'
+    commands:
+      - tapOn:
+          id: 'modal-button-Ok'
+      - swipe:
+          from:
+            id: 'cardrequest-item-1' # From (x, y) center of element
+          direction: DOWN # To (50% of width, 10% of height)
+      - tapOn:
+          id: 'tabBarButton-TouchableOpacity-Home'
+
+- runFlow:
+    when:
+      visible:
+        id: 'modal-button-Confirm'
+    commands:
+      - tapOn:
+          id: 'modal-button-Confirm'
+      - tapOn:
+          id: 'NameInput'
+      - inputText: 'Zaid Abdul Rehman Shaikh'
+      - tapOn:
+          id: 'coreText-ConfirmBtnLabel'
+      - assertVisible: 'Pyypl card Prepaid'
+      - assertVisible:
+          id: 'coreText-headerBar-title'
+      - tapOn:
+          id: 'coreText-Text'
+          index: 1
+      - assertVisible: ${ FEES }
+      - tapOn:
+          id: 'coreText-ConfirmBtnLabel'
+      - tapOn:
+          id: 'tabBarButton-TouchableOpacity-Home'
